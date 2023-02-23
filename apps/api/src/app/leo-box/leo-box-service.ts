@@ -25,9 +25,11 @@ export class LeoBoxService {
     public async tagChanged(tagUid?: string): Promise<void> {
         const playable = tagUid ? (await this.getMusicTagByUid[tagUid]) : undefined;
         if (playable) {
-            this.startPlaying(playable);
+            console.log("Found playable "+playable+" from tag "+tagUid+": starting");
+            await this.startPlaying(playable);
         } else {
-            this.stopPlaying();
+            console.log("Found no playable from tag "+tagUid+": stopping");
+            await this.stopPlaying();
         }
     }
 
@@ -41,10 +43,10 @@ export class LeoBoxService {
                 return;
             } else if (this.lastPlayed === playable && this.lastMusicPosition) {
                 // continue
-                this.musicProvider.contine(playable, this.lastMusicPosition);
+                await this.musicProvider.contine(playable, this.lastMusicPosition);
             } else {
                 // start from beginning
-                this.musicProvider.play(playable);
+                await this.musicProvider.play(playable);
             }
             this.currentlyPlaying = playable;
             this.lastPlayed = undefined;

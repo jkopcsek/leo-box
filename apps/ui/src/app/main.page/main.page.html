@@ -9,7 +9,7 @@
       <p-card [classList]="['rfid-scanner-card']">
         <div class="rfid-scanner-card-content">
           <img *ngIf="!currentTag" class="rfid-scanner-icon" src="assets/rfid-icon.svg"/>
-          <p-card *ngIf="currentTag">
+          <p-card *ngIf="currentTag" [style.background]="'white'">
             {{currentTag.uid}}
           </p-card>
         </div>

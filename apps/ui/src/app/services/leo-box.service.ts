@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { ApolloQueryResult, FetchResult } from '@apollo/client/core';
-import { Apollo, ApolloBase, gql } from 'apollo-angular';
+import { Apollo, ApolloBase, gql, MutationResult } from 'apollo-angular';
 import { Observable } from 'rxjs';
 
 export interface Tag {
@@ -54,9 +54,9 @@ export class LeoBoxService {
     });
   }
 
-  public upsertMusicTag(uid: string, name: string, spotifyUri: string, imageUrl?: string): Observable<ApolloQueryResult<{upsertMusicTag: MusicTag}>> {
-    return this.apollo.query({
-      query: gql`mutation upsertMusicTag($uid: String!, $name: String, $imageUrl: String, $spotifyUri: String) {
+  public upsertMusicTag(uid: string, name: string, spotifyUri: string, imageUrl?: string): Observable<MutationResult<{upsertMusicTag: MusicTag}>> {
+    return this.apollo.mutate({
+      mutation: gql`mutation upsertMusicTag($uid: String!, $name: String, $imageUrl: String, $spotifyUri: String) {
         upsertMusicTag(uid: $uid, name: $name, imageUrl: $imageUrl, spotifyUri: $spotifyUri) {
           uid,
           name,
@@ -70,9 +70,9 @@ export class LeoBoxService {
     });
   }
 
-  public deleteMusicTag(uid: string): Observable<ApolloQueryResult<{deleteMusicTag: MusicTag}>> {
-    return this.apollo.query({
-      query: gql`mutation deleteMusicTag($uid: String!) {
+  public deleteMusicTag(uid: string): Observable<MutationResult<{deleteMusicTag: MusicTag}>> {
+    return this.apollo.mutate({
+      mutation: gql`mutation deleteMusicTag($uid: String!) {
         deleteMusicTag(uid: $uid) {
           uid,
           name,

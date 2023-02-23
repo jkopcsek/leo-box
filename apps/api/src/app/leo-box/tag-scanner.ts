@@ -59,10 +59,8 @@ export class TagScanner implements OnApplicationBootstrap, OnApplicationShutdown
         //# Scan for cards
         const response = this.mfrc522.findCard();
         if (!response.status) {
-            console.log("No Card");
             return;
         }
-        console.log("Card detected, CardType: " + response.bitSize);
 
         //# Get the UID of the card
         const response2 = this.mfrc522.getUid();
@@ -73,9 +71,7 @@ export class TagScanner implements OnApplicationBootstrap, OnApplicationShutdown
         //# If we have the UID, continue
         const uid = response2.data;
         if (uid) {
-            const uidString = uid.map((a) => a.toString(16)).join('');
-            console.log("Card read UID: " + uidString);
-            return uidString;
+            return uid.map((a) => a.toString(16)).join('');
         }
 
         //# Stop

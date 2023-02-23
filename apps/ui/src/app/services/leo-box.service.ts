@@ -56,8 +56,8 @@ export class LeoBoxService {
 
   public upsertMusicTag(uid: string, name: string, spotifyUri: string, imageUrl?: string): Observable<MutationResult<{upsertMusicTag: MusicTag}>> {
     return this.apollo.mutate({
-      mutation: gql`mutation upsertMusicTag($uid: String!, $name: String, $imageUrl: String, $spotifyUri: String) {
-        upsertMusicTag(uid: $uid, name: $name, imageUrl: $imageUrl, spotifyUri: $spotifyUri) {
+      mutation: gql`mutation upsertMusicTag($uid: String!, $data: MusicTagUpdateInput!) {
+        upsertMusicTag(uid: $uid, data: $data) {
           uid,
           name,
           spotifyUri
@@ -65,7 +65,7 @@ export class LeoBoxService {
         }
       }`, 
       variables: {
-        uid, name, imageUrl, spotifyUri
+        uid, data: {name, imageUrl, spotifyUri}
       }
     });
   }

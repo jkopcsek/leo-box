@@ -19,11 +19,11 @@ export class LeoBoxService {
         private readonly musicProvider: SpotifyMusicProvider,
         private readonly tagScanner: TagScanner,
     ) {
-        this.tagScannerSubscription = tagScanner.currentTag.subscribe((tag) => this.tagChanged(tag?.uid))
+        this.tagScannerSubscription = tagScanner.currentTag.subscribe(async (tag) => await this.tagChanged(tag?.uid))
     }
 
-    public tagChanged(tagUid?: string) {
-        const playable = tagUid ? this.getMusicTagByUid[tagUid] : undefined;
+    public async tagChanged(tagUid?: string): Promise<void> {
+        const playable = tagUid ? (await this.getMusicTagByUid[tagUid]) : undefined;
         if (playable) {
             this.startPlaying(playable);
         } else {

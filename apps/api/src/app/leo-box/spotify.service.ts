@@ -208,7 +208,6 @@ export class SpotifyService {
                 q, type
             }
         }));
-        console.log(result);
         return result.data;
     }
 }

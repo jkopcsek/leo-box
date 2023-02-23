@@ -1,12 +1,14 @@
 /// <reference path="../mfrc522-rpi/mfrc522-rpi.d.ts"/>
 /// <reference path="../rpi-softspi/rpi-softspi.d.ts"/>
+import { Injectable, OnApplicationBootstrap, OnApplicationShutdown } from '@nestjs/common';
 import Mfrc522 from 'mfrc522-rpi';
 import SoftSPI from 'rpi-softspi';
 import { BehaviorSubject } from 'rxjs';
 
 export type Tag = { uid: string };
 
-export class TagScanner {
+@Injectable()
+export class TagScanner implements OnApplicationBootstrap, OnApplicationShutdown {
     public currentTag = new BehaviorSubject<Tag | undefined>(undefined);
 
     private softSPI: SoftSPI;
@@ -24,6 +26,14 @@ export class TagScanner {
         this.mfrc522 = new Mfrc522(this.softSPI);
     }
 
+    public onApplicationBootstrap() {
+        this.start();
+    }
+
+    public onApplicationShutdown() {
+        this.stop();
+    }
+
     public start(): void {
         this.timer = setInterval(() => this.check(), 1000);
     }
@@ -37,6 +47,7 @@ export class TagScanner {
     private check(): void {
         const currentTagUid = this.readTagUid();
         if (currentTagUid !== this.currentTag.value?.uid) {
+            console.log("Identified tag: "+currentTagUid);
             this.currentTag.next( currentTagUid ? { uid: currentTagUid } : undefined );
         }
     }

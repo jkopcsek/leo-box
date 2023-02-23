@@ -43,7 +43,7 @@
     <ng-template let-tag pTemplate="listItem">
         <div class="music-tag-row">
             {{tag.uid}} -> {{tag.name}}
-            <button type="button" pButton icon="pi pi-delete"  (click)="deleteMusicTag(tag.uid)"></button>
+            <button type="button" pButton icon="pi pi-delete"  (click)="deleteMusicTag(tag)"></button>
         </div>
     </ng-template>
   </p-dataView>

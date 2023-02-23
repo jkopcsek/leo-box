@@ -1,16 +1,7 @@
 import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma/prisma.service";
 import { Playable, Position } from "./music-provider";
 import { SpotifyMusicProvider } from "./spotify-music-provider";
-
-interface MusicTag {
-    uid: string;
-    albumId?: string;
-    songId?: string;
-}
-
-const PlayableByTagUid: Record<string, Playable> = {
-    "1234": {spotifyUri: 'uri' }
-}
 
 @Injectable()
 export class LeoBoxService {
@@ -19,16 +10,20 @@ export class LeoBoxService {
     public lastPlayed?: Playable;
     public lastMusicPosition?: Position;
 
-    constructor(private readonly musicProvider: SpotifyMusicProvider) {
+    constructor(private readonly prisma: PrismaService, private readonly musicProvider: SpotifyMusicProvider) {
     }
 
     public tagChanged(tagUid?: string) {
-        const playable = tagUid ? PlayableByTagUid[tagUid] : undefined;
+        const playable = tagUid ? this.getMusicTagByUid[tagUid] : undefined;
         if (playable) {
             this.startPlaying(playable);
         } else {
             this.stopPlaying();
         }
+    }
+
+    public async getMusicTagByUid(uid: string): Promise<Playable | undefined> {
+        return await this.prisma.musicTag.findUnique({where: { uid }});
     }
     
     public async startPlaying(playable: Playable): Promise<void> {

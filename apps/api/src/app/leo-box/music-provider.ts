@@ -1,5 +1,7 @@
 
 export interface Playable {
+    name: string;
+    imageUrl?: string;
     spotifyUri: string;
 }
 

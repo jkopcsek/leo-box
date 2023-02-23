@@ -19,7 +19,7 @@ export class LeoBoxService {
         private readonly musicProvider: SpotifyMusicProvider,
         private readonly tagScanner: TagScanner,
     ) {
-        this.tagScannerSubscription = tagScanner.currentTag.subscribe((tag) => this.tagChanged(tag.uid))
+        this.tagScannerSubscription = tagScanner.currentTag.subscribe((tag) => this.tagChanged(tag?.uid))
     }
 
     public tagChanged(tagUid?: string) {

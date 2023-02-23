@@ -77,10 +77,6 @@ export class SpotifyResolver {
       return undefined;
     }
 
-    console.log(images);
-    const sorted = images.filter((a) => a.height < 64).sort((a, b) => b.height - a.height);
-    console.log(images);
-
     return images.filter((a) => a.height > 63).sort((a, b) => a.height - b.height).at(0)?.url;
   }
 

@@ -36,7 +36,8 @@ export class LeoBoxService {
         currentTag {
           uid
         }
-      }`
+      }`,
+      pollInterval: 1000,
     }).valueChanges;
   }
  

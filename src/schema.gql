@@ -1,0 +1,63 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type MusicTagObject {
+  uid: String!
+  createdAt: Timestamp!
+  modifiedAt: Timestamp!
+  name: String!
+  imageUrl: String!
+  spotifyUri: String!
+}
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type TagObject {
+  uid: String!
+}
+
+type SpotifyItemObject {
+  type: String!
+  name: String!
+  uri: String!
+  imageUrl: String
+}
+
+type SpotifyAuthObject {
+  url: String!
+}
+
+type Query {
+  musicTags: [MusicTagObject!]
+  currentTag: TagObject
+  search(query: String!, type: String!): [SpotifyItemObject!]!
+  spotifyAuth: SpotifyAuthObject!
+}
+
+type Mutation {
+  createMusicTag(data: MusicTagCreateInput!): MusicTagObject!
+  updateMusicTag(uid: String!, data: MusicTagUpdateInput!): MusicTagObject!
+  upsertMusicTag(uid: String!, data: MusicTagUpdateInput!): MusicTagObject!
+  deleteMusicTag(uid: String!): MusicTagObject!
+}
+
+input MusicTagCreateInput {
+  uid: String!
+  name: String!
+  imageUrl: String!
+  spotifyUri: String!
+}
+
+input MusicTagUpdateInput {
+  name: String!
+  imageUrl: String!
+  spotifyUri: String!
+}
+
+type Subscription {
+  currentTagChanged: TagObject!
+}

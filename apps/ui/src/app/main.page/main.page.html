@@ -1,0 +1,52 @@
+<nav>
+  <header>
+    <h1>LEO BOX - Raawwrr</h1>
+  </header>
+</nav>
+<main>
+  <div class="grid fluid">
+    <div class="col-12 current-tag-and-music">
+      <p-card [classList]="['rfid-scanner-card']">
+        <div class="rfid-scanner-card-content">
+          <img *ngIf="!currentTag" class="rfid-scanner-icon" src="assets/rfid-icon.svg"/>
+          <p-card *ngIf="currentTag">
+            {{currentTag.uid}}
+          </p-card>
+        </div>
+      </p-card>
+      <i class="tag-to-music-icon pi pi-chevron-right"></i>
+      <p-card [classList]="['rfid-scanner-card']">
+        <div class="rfid-scanner-card-content">
+          <img *ngIf="!currentTag" class="rfid-scanner-icon" src="assets/sound-waves.svg"/>
+          
+        </div>
+      </p-card>
+    </div>
+  </div>
+
+  <h3>Spotify <button pButton icon="pi pi-external-link" class="p-button-rounded p-button-text" (click)="authenticateSpotify()"></button></h3>
+  <div class="p-inputgroup">
+    <input type="text" pInputText placeholder="Search..." #query>   
+    <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn" (click)="search(query.value)"></button>      
+  </div>
+
+  <p-dataView [value]="spotifyResults">
+    <ng-template let-item pTemplate="listItem">
+        <div class="spotify-item-row" (click)="connect(item)">
+            <img [src]="item.imageUrl"> {{item.name}}
+        </div>
+    </ng-template>
+  </p-dataView>
+  
+  <h3>Music Tags</h3>
+  <p-dataView [value]="musicTags">
+    <ng-template let-tag pTemplate="listItem">
+        <div class="music-tag-row">
+            {{tag.uid}} -> {{tag.name}}
+            <button type="button" pButton icon="pi pi-delete"  (click)="deleteMusicTag(tag.uid)"></button>
+        </div>
+    </ng-template>
+  </p-dataView>
+  
+</main>
+

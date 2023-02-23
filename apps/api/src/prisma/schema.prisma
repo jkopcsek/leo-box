@@ -1,0 +1,39 @@
+generator client {
+  provider        = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ========================================
+//   Configuration
+// ========================================
+
+model Configuration {
+  key        String   @id
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  value String
+
+  @@map("configuration")
+}
+
+
+// ========================================
+//   Music Tag
+// ========================================
+
+model MusicTag {
+  uid        String   @id
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  name       String
+  spotifyUri String
+  imageUrl   String?
+
+  @@map("music_tag")
+}

@@ -1,0 +1,16 @@
+-- CreateTable
+CREATE TABLE "configuration" (
+    "key" TEXT NOT NULL PRIMARY KEY,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "value" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "music_tag" (
+    "uid" TEXT NOT NULL PRIMARY KEY,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "name" TEXT NOT NULL,
+    "spotifyUri" TEXT NOT NULL
+);

@@ -1,0 +1,31 @@
+header, main {
+  margin: 32px;
+}
+
+.current-tag-and-music {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rfid-scanner-card-content {
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  width: 23rem;
+  height: 12rem;
+}
+
+.tag-to-music-icon {
+  padding: 16px;
+  font-size: 24px;
+}
+
+.spotify-item-row, .music-tag-row {
+  padding: 8px;
+  cursor: pointer;
+
+  :hover {
+    background-color: lightblue;
+  }
+}

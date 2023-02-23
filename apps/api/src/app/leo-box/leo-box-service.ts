@@ -23,7 +23,7 @@ export class LeoBoxService {
     }
 
     public async tagChanged(tagUid?: string): Promise<void> {
-        const playable = tagUid ? (await this.getMusicTagByUid[tagUid]) : undefined;
+        const playable = tagUid ? (await this.getMusicTagByUid(tagUid)) : undefined;
         if (playable) {
             console.log("Found playable "+playable+" from tag "+tagUid+": starting");
             await this.startPlaying(playable);

@@ -54,10 +54,10 @@ export class LeoBoxService {
     });
   }
 
-  public upsertMusicTag(uid: string, name: string, spotifyUri: string): Observable<ApolloQueryResult<{upsertMusicTag: MusicTag}>> {
+  public upsertMusicTag(uid: string, name: string, spotifyUri: string, imageUrl?: string): Observable<ApolloQueryResult<{upsertMusicTag: MusicTag}>> {
     return this.apollo.query({
-      query: gql`mutation upsertMusicTag($uid: String!, $name: String, $spotifyUri: String) {
-        upsertMusicTag(uid: $uid, name: $name, spotifyUri: $spotifyUri) {
+      query: gql`mutation upsertMusicTag($uid: String!, $name: String, $imageUrl: String, $spotifyUri: String) {
+        upsertMusicTag(uid: $uid, name: $name, imageUrl: $imageUrl, spotifyUri: $spotifyUri) {
           uid,
           name,
           spotifyUri
@@ -65,7 +65,7 @@ export class LeoBoxService {
         }
       }`, 
       variables: {
-        uid, name, spotifyUri
+        uid, name, imageUrl, spotifyUri
       }
     });
   }

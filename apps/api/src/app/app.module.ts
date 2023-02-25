@@ -15,6 +15,10 @@ import { MusicTagResolver } from './leo-box/resolvers/music-tag.resolver';
 import { CurrentTagResolver } from './leo-box/resolvers/current-tag.resolver';
 import { TagScanner } from './leo-box/tag-scanner';
 import { SpotifyResolver } from './leo-box/resolvers/spotify.resolver';
+import { SonosService } from './leo-box/sonos.service';
+import { SonosController } from './leo-box/rest/sonos.controller';
+import { SonosResolver } from './leo-box/resolvers/sonos.resolver';
+import { ConfigurationService } from './leo-box/configuration.service';
 
 @Module({
   imports: [
@@ -28,7 +32,7 @@ import { SpotifyResolver } from './leo-box/resolvers/spotify.resolver';
       buildSchemaOptions: { dateScalarMode: 'timestamp' },
     }),
   ],
-  controllers: [LeoBoxController, SpotifyAuthController, SpotifyController],
-  providers: [LeoBoxService, SpotifyService, SpotifyMusicProvider, MusicTagResolver, CurrentTagResolver, SpotifyResolver, TagScanner],
+  controllers: [LeoBoxController, SpotifyAuthController, SpotifyController, SonosController],
+  providers: [ConfigurationService, LeoBoxService, SpotifyService, SpotifyMusicProvider, SonosService, MusicTagResolver, CurrentTagResolver, SpotifyResolver, SonosResolver, TagScanner],
 })
 export class AppModule {}

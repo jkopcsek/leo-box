@@ -96,10 +96,36 @@ export class LeoBoxService {
     });
   }
 
-  public querySpotify(query: string, type: string): Observable<ApolloQueryResult<{search: SpotifyItem[]}>> {
+  public querySpotify(query: string, type: string): Observable<ApolloQueryResult<{spotifySearch: SpotifyItem[]}>> {
     return this.apollo.query({
-      query: gql`query Search($query: String!, $type: String!) {
-        search(query: $query, type: $type) {
+      query: gql`query SpotifySearch($query: String!, $type: String!) {
+        spotifySearch(query: $query, type: $type) {
+          uri,
+          name,
+          type,
+          imageUrl
+        }
+      }`,
+      variables: {
+        query, type
+      }
+    });
+  }
+
+  public querySonosAuthentication(): Observable<ApolloQueryResult<{sonosAuth: {url: string}}>> {
+    return this.apollo.query({
+      query: gql`query SonosAuth {
+        sonosAuth {
+          url
+        }
+      }`,
+    });
+  }
+
+  public querySonos(query: string, type: string): Observable<ApolloQueryResult<{sonosSearch: SpotifyItem[]}>> {
+    return this.apollo.query({
+      query: gql`query SonosSearch($query: String!, $type: String!) {
+        sonosSearch(query: $query, type: $type) {
           uri,
           name,
           type,

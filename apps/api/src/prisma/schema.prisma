@@ -32,7 +32,8 @@ model MusicTag {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   name       String
-  spotifyUri String
+  type       String
+  uri String
   imageUrl   String?
 
   @@map("music_tag")

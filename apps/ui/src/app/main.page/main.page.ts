@@ -11,6 +11,7 @@ export class MainPage implements OnInit, OnDestroy {
   public currentTag?: Tag;
   public musicTags: MusicTag[] = []
   public spotifyResults: SpotifyItem[] = []
+  public sonosResults: SpotifyItem[] = []
 
   private currentTagSubscription?: Subscription;
   private musicTagsSubscription?: Subscription;
@@ -46,9 +47,19 @@ export class MainPage implements OnInit, OnDestroy {
     window.location.href = result.data.spotifyAuth.url;
   }
 
-  public async search(query: string) {
+  public async searchSpotify(query: string) {
     const result = await lastValueFrom(this.leoBoxService.querySpotify(query, 'album'));
-    this.spotifyResults = result.data.search;
+    this.spotifyResults = result.data.spotifySearch;
+  }
+
+  public async authenticateSonos() {
+    const result = await lastValueFrom(this.leoBoxService.querySonosAuthentication());
+    window.location.href = result.data.sonosAuth.url;
+  }
+
+  public async searchSonos(query: string) {
+    const result = await lastValueFrom(this.leoBoxService.querySonos(query, 'album'));
+    // this.spotifyResults = result.data.search;
   }
 
   public async connect(item: SpotifyItem) {

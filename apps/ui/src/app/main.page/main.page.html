@@ -23,11 +23,27 @@
       </p-card>
     </div>
   </div>
+  
+<!--
+  <h3>Sonos <button pButton icon="pi pi-external-link" class="p-button-rounded p-button-text" (click)="authenticateSonos()"></button></h3>
+  <div class="p-inputgroup">
+    <input type="text" pInputText placeholder="Search..." #sonosQuery>   
+    <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn" (click)="searchSonos(sonosQuery.value)"></button>      
+  </div>
+
+  <p-dataView [value]="sonosResults">
+    <ng-template let-item pTemplate="listItem">
+        <div class="spotify-item-row" (click)="connect(item)">
+            <img [src]="item.imageUrl"> {{item.name}}
+        </div>
+    </ng-template>
+  </p-dataView>
+-->
 
   <h3>Spotify <button pButton icon="pi pi-external-link" class="p-button-rounded p-button-text" (click)="authenticateSpotify()"></button></h3>
   <div class="p-inputgroup">
-    <input type="text" pInputText placeholder="Search..." #query>   
-    <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn" (click)="search(query.value)"></button>      
+    <input type="text" pInputText placeholder="Search..." #spotifyQuery>   
+    <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn" (click)="searchSpotify(spotifyQuery.value)"></button>      
   </div>
 
   <p-dataView [value]="spotifyResults">

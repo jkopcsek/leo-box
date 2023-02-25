@@ -14,4 +14,9 @@ export class SpotifyAuthController {
   public async callback(@Query('code') code: string, @Query('state') state: string): Promise<string> {
     return await this.spotifyService.authenticateCallback(code, state);
   }
+
+  @Get('/refresh')
+  public async refresh(): Promise<void> {
+    return await this.spotifyService.refreshToken();
+  }
 }

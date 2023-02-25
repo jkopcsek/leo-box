@@ -31,11 +31,25 @@ type SpotifyAuthObject {
   url: String!
 }
 
+type SonosItemObject {
+  type: String!
+  name: String!
+  uri: String!
+  imageUrl: String
+}
+
+type SonosAuthObject {
+  url: String!
+}
+
 type Query {
   musicTags: [MusicTagObject!]
   currentTag: TagObject
-  search(query: String!, type: String!): [SpotifyItemObject!]!
   spotifyAuth: SpotifyAuthObject!
+  spotifySearch(query: String!, type: String!): [SpotifyItemObject!]!
+  spotifyTracks(albumId: String!): [SpotifyItemObject!]!
+  sonosAuth: SonosAuthObject!
+  sonosSearch(query: String!, type: String!): [SonosItemObject!]!
 }
 
 type Mutation {
@@ -48,14 +62,16 @@ type Mutation {
 input MusicTagCreateInput {
   uid: String!
   name: String!
+  type: String!
   imageUrl: String!
-  spotifyUri: String!
+  uri: String!
 }
 
 input MusicTagUpdateInput {
   name: String!
+  type: String!
   imageUrl: String!
-  spotifyUri: String!
+  uri: String!
 }
 
 type Subscription {

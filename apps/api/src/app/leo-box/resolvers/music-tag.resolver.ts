@@ -17,10 +17,13 @@ class MusicTagCreateInput {
     name: string
 
     @Field()
+    type: string
+
+    @Field()
     imageUrl: string
 
     @Field()
-    spotifyUri: string
+    uri: string
 }
 
 @InputType()
@@ -29,10 +32,13 @@ class MusicTagUpdateInput {
     name: string
 
     @Field()
+    type: string
+
+    @Field()
     imageUrl: string
 
     @Field()
-    spotifyUri: string
+    uri: string
 }
 
 @Resolver(MusicTagObject)
@@ -55,7 +61,8 @@ export class MusicTagResolver {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 name: data.name,
-                spotifyUri: data.spotifyUri,
+                type: data.type,
+                uri: data.uri,
                 imageUrl: data.imageUrl,
             },
         }));
@@ -70,7 +77,7 @@ export class MusicTagResolver {
         return plainToInstance(MusicTagObject, await this.prisma.musicTag.update({
             where: { uid: uid },
             data: {
-                spotifyUri: data.spotifyUri,
+                uri: data.uri,
                 imageUrl: data.imageUrl,
             },
         }));
@@ -87,12 +94,14 @@ export class MusicTagResolver {
             create: {
                 uid: uid,
                 name: data.name,
-                spotifyUri: data.spotifyUri,
+                type: data.type,
+                uri: data.uri,
                 imageUrl: data.imageUrl,
             },
             update: {
                 name: data.name,
-                spotifyUri: data.spotifyUri,
+                type: data.type,
+                uri: data.uri,
                 imageUrl: data.imageUrl,
             },
         }));

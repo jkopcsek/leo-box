@@ -32,8 +32,15 @@ export class SpotifyResolver {
   constructor(@Inject(SpotifyService) private readonly spotifyService: SpotifyService) {
   }
 
+  @Query((returns) => SpotifyAuthObject)
+  async spotifyAuth(): Promise<SpotifyAuthObject> {
+    const result = await this.spotifyService.authenticateOAuth();
+
+    return { url: result };
+  }
+
   @Query((returns) => [SpotifyItemObject])
-  async search(
+  async spotifySearch(
     @Args('query') query: string,
     @Args('type') type?: string,
   ): Promise<SpotifyItemObject[]> {
@@ -47,12 +54,15 @@ export class SpotifyResolver {
     ]
   }
 
-  @Query((returns) => SpotifyAuthObject)
-  async spotifyAuth(): Promise<SpotifyAuthObject> {
-    const result = await this.spotifyService.authenticateOAuth();
+  @Query((returns) => [SpotifyItemObject])
+  async spotifyTracks(
+    @Args('albumId') albumId: string,
+  ): Promise<SpotifyItemObject[]> {
+    const result = await this.spotifyService.getTracks(albumId);
 
-    return { url: result };
+    return result.map((i) => this.trackToItem(i));
   }
+
   
   trackToItem(i: TrackResponse) {
     return {

@@ -67,7 +67,8 @@ export class MainPage implements OnInit, OnDestroy {
       return;
     }
 
-    await lastValueFrom(this.leoBoxService.upsertMusicTag(this.currentTag.uid, item.name, item.uri, item.imageUrl));
+    await lastValueFrom(this.leoBoxService.upsertMusicTag(this.currentTag.uid, item.name,
+      item.type, item.uri, item.imageUrl));
   }
   
   public async deleteMusicTag(musicTag: MusicTag) {

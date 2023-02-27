@@ -11,7 +11,8 @@ export interface Tag {
 export interface MusicTag {
   uid: string;
   name: string;
-  spotifyUri: string;
+  type: string;
+  uri: string;
   imageUrl?: string;
 }
 
@@ -47,25 +48,27 @@ export class LeoBoxService {
         musicTags {
           uid,
           name,
-          spotifyUri,
+          type,
+          uri,
           imageUrl
         }
       }`
     });
   }
 
-  public upsertMusicTag(uid: string, name: string, type: string, spotifyUri: string, imageUrl?: string): Observable<MutationResult<{upsertMusicTag: MusicTag}>> {
+  public upsertMusicTag(uid: string, name: string, type: string, uri: string, imageUrl?: string): Observable<MutationResult<{upsertMusicTag: MusicTag}>> {
     return this.apollo.mutate({
       mutation: gql`mutation upsertMusicTag($uid: String!, $data: MusicTagUpdateInput!) {
         upsertMusicTag(uid: $uid, data: $data) {
           uid,
           name,
-          spotifyUri
+          type,
+          uri,
           imageUrl
         }
       }`, 
       variables: {
-        uid, data: {name, type, imageUrl, spotifyUri}
+        uid, data: {name, type, imageUrl, uri}
       }
     });
   }
@@ -76,7 +79,8 @@ export class LeoBoxService {
         deleteMusicTag(uid: $uid) {
           uid,
           name,
-          spotifyUri,
+          type,
+          uri,
           imageUrl
         }
       }`, 

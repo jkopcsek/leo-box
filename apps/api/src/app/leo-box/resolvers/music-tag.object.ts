@@ -11,13 +11,16 @@ export class MusicTagObject {
     
     @Field(() => Date)
     modifiedAt: Date;
-    
+
     @Field(() => String)
     name?: string;
+    
+    @Field(() => String)
+    type?: string;
     
     @Field(() => String)
     imageUrl?: string;
 
     @Field(() => String)
-    spotifyUri?: string;
+    uri?: string;
 }

@@ -7,8 +7,9 @@ type MusicTagObject {
   createdAt: Timestamp!
   modifiedAt: Timestamp!
   name: String!
+  type: String!
   imageUrl: String!
-  spotifyUri: String!
+  uri: String!
 }
 
 """

@@ -1,6 +1,5 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from "@nestjs/common";
-import { SonosDevice } from '@svrooij/sonos';
 import QueryString from "qs";
 import { lastValueFrom } from 'rxjs';
 import { ConfigurationService } from './configuration.service';
@@ -178,7 +177,6 @@ const SONOS_REFRESH_TOKEN = "SONOS_REFRESH_TOKEN";
 
 @Injectable()
 export class SonosService {
-    private sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.2.105');
     private clientId = process.env.SONOS_CLIENT_ID;
     private clientSecret = process.env.SONOS_CLIENT_SECRET;
     private redirectUri = 'http://localhost:8080/sonos/callback/';

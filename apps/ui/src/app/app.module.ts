@@ -54,7 +54,7 @@ AppComponent
         return {
           cache: new InMemoryCache(),
           link: httpLink.create({
-            uri: 'http://localhost:8080/graphql',
+            uri: '/graphql',
           }),
         };
       },

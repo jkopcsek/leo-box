@@ -9,9 +9,9 @@
       <p-card [classList]="['rfid-scanner-card']">
         <div class="rfid-scanner-card-content">
           <img *ngIf="!currentTag" class="rfid-scanner-icon" src="assets/rfid-icon.svg"/>
-          <p-card *ngIf="currentTag" [style.background]="'white'">
+          <div *ngIf="currentTag" class="rfid-card">
             {{currentTag.uid}}
-          </p-card>
+          </div>
         </div>
       </p-card>
       <i class="tag-to-music-icon pi pi-chevron-right"></i>
@@ -23,7 +23,7 @@
       </p-card>
     </div>
   </div>
-  
+
 <!--
   <h3>Sonos <button pButton icon="pi pi-external-link" class="p-button-rounded p-button-text" (click)="authenticateSonos()"></button></h3>
   <div class="p-inputgroup">

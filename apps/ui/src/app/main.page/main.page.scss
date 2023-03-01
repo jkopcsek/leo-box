@@ -1,4 +1,9 @@
-header, main {
+header {
+  padding: 16px 32px;
+  background: #2a323d;
+}
+
+main {
   margin: 32px;
 }
 
@@ -6,19 +11,40 @@ header, main {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+  flex-direction: row;
 
-.rfid-scanner-card-content {
-  display: flex; 
-  justify-content: center;
-  align-items: center;
-  width: 23rem;
-  height: 12rem;
-}
+  .rfid-scanner-card-content {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    width: 23rem;
+    height: 12rem;
 
-.tag-to-music-icon {
-  padding: 16px;
-  font-size: 24px;
+    .rfid-card {
+      width: 80%;
+      height: 80%;
+      display: flex;
+      background: #c3cad5;
+      color: #495057;
+      box-shadow: 0 2px 1px -1px #0003, 0 1px 1px #00000024, 0 1px 3px #0000001f;
+      border-radius: 6px;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .tag-to-music-icon {
+    padding: 16px;
+    font-size: 24px;
+  }
+  
+  @media only screen and (max-width: 850px) {
+    flex-direction: column;
+
+    .tag-to-music-icon::before {
+      content: "\e902";
+    }
+  }
 }
 
 .spotify-item-row, .music-tag-row {

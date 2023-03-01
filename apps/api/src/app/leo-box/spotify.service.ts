@@ -92,7 +92,7 @@ export class SpotifyService {
     private scope = 'user-read-playback-state user-modify-playback-state user-read-currently-playing';
 
     constructor(
-        private readonly configuration: ConfigurationService, 
+        private readonly configuration: ConfigurationService,
         private readonly http: HttpService) {
     }
 
@@ -173,23 +173,14 @@ export class SpotifyService {
     }
 
     public async play(contextUri?: string, offsetUri?: string, positionMs?: number, deviceId?: string): Promise<void> {
-        const accessToken = await this.configuration.get(SPOTIFY_ACCESS_TOKEN);
         try {
-            const result = await lastValueFrom(this.http.put('https://api.spotify.com/v1/me/player/play', {
+            await this.put('/me/player/play', {
                 context_uri: contextUri,
                 offset: offsetUri ? { uri: offsetUri } : undefined,
                 position_ms: positionMs
             }, {
-                headers: {
-                    'Authorization': 'Bearer ' + accessToken,
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json'
-                },
-                params: {
-                    device_id: deviceId ?? DEFAULT_DEVICE_ID,
-                }
-            }));
-            console.log(result);
+                device_id: deviceId ?? DEFAULT_DEVICE_ID,
+            });
         } catch (error) {
             console.error(error);
             console.error(error.response.data.error);
@@ -198,15 +189,7 @@ export class SpotifyService {
     }
 
     public async pause(): Promise<void> {
-        const accessToken = await this.configuration.get(SPOTIFY_ACCESS_TOKEN);
-        const result = await lastValueFrom(this.http.put('https://api.spotify.com/v1/me/player/pause', {}, {
-            headers: {
-                'Authorization': 'Bearer ' + accessToken,
-                'Content-Type': 'application/json',
-                Accept: 'application/json'
-            }
-        }));
-        console.log(result);
+        return this.put('/me/player/pause', {});
     }
 
     public async getDevices(): Promise<any> {
@@ -214,7 +197,7 @@ export class SpotifyService {
     }
 
     public async search(q: string, type: string): Promise<SearchResponse> {
-        return this.get('/search', {               q, type            });
+        return this.get('/search', { q, type });
     }
 
     private async getAll<T extends ListResponse<S>, S>(path: string, params?: Record<string, string>): Promise<S[]> {
@@ -232,20 +215,45 @@ export class SpotifyService {
 
     private async get<T>(path: string, params?: Record<string, string>): Promise<T> {
         try {
-            const accessToken = await this.configuration.get(SPOTIFY_ACCESS_TOKEN);
-            const response = await lastValueFrom(this.http.get<T>(path, {
-                baseURL: 'https://api.spotify.com/v1',
-                headers: {
-                    'Authorization': 'Bearer ' + accessToken,
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-                params,
-            }));
-            return response.data;
+            return await this.request('get', path, undefined, params);
         } catch (error) {
-            console.log(error);
+            console.error(error);
+            if (error.response.statusCode === 401) {
+                await this.refreshToken();
+                return await this.request('get', path, undefined, params);
+            }
             throw error;
         }
+    }
+
+    private async put<T>(path: string, data: object, params?: Record<string, string>): Promise<T> {
+        try {
+            return await this.request('put', path, data, params);
+        } catch (error) {
+            console.error(error);
+            console.error(error.response.data.error);
+            if (error.response.statusCode === 401) {
+                await this.refreshToken();
+                return await this.request('put', path, data, params);
+            }
+            throw error;
+        }
+    }
+
+    private async request<T>(method: string, path: string, data: object, params?: Record<string, string>): Promise<T> {
+        const accessToken = await this.configuration.get(SPOTIFY_ACCESS_TOKEN);
+        const result = await lastValueFrom(this.http.request({
+            baseURL: 'https://api.spotify.com/v1',
+            url: path,
+            method,
+            data,
+            params,
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        }));
+        return result.data;
     }
 }

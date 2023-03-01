@@ -59,6 +59,7 @@
   <p-dataView [value]="musicTags">
     <ng-template let-tag pTemplate="listItem">
         <div class="music-tag-row">
+          <img class="music-tag-icon" [src]="tag.imageUrl"> 
           <div class="music-tag-title">{{tag.uid}} -> {{tag.name}}</div>
           <button class="music-tag-delete" type="button" pButton icon="pi pi-trash"  (click)="deleteMusicTag(tag)"></button>
         </div>

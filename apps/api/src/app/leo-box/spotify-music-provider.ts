@@ -44,12 +44,14 @@ export class SpotifyMusicProvider implements MusicProvider {
   }
 
   public async contine(playable: Playable, position: Position): Promise<void> {
+    console.log("Continue with: "+JSON.stringify({uri: playable.uri, position}));
     await this.spotifyService.play(playable.uri, position.trackUri, position.positionMs);
   }
 
   public async stop(playable: Playable): Promise<Position> {
     const currentlyPlaying = await this.spotifyService.getCurrentlyPlaying();
-    const result = await this.spotifyService.pause();
+    await this.spotifyService.pause();
+    console.log("Stopped at: "+JSON.stringify({ trackUri: currentlyPlaying.item.uri, positionMs: currentlyPlaying.progress_ms }));
     return { trackUri: currentlyPlaying.item.uri, positionMs: currentlyPlaying.progress_ms };
   }
 

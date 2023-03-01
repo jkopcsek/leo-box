@@ -86,7 +86,8 @@ const SPOTIFY_REFRESH_TOKEN = 'SPOTIFY_REFRESH_TOKEN';
 export class SpotifyService {
     private clientId = process.env.SPOTIFY_CLIENT_ID;
     private clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-    private redirectUri = 'http://localhost:8080/spotify-auth/callback/';
+    private redirectUri = process.env.SPOTIFY_AUTH_REDIRECT_URL;
+    private publicUrl = process.env.PUBLIC_URL;
     private state = '8943jfi3io4';
     private scope = 'user-read-playback-state user-modify-playback-state user-read-currently-playing';
 
@@ -110,9 +111,9 @@ export class SpotifyService {
         if (state === this.state) {
             await this.configuration.set(SPOTIFY_AUTH_CODE, code);
             await this.getAccessToken();
-            return "DONE";
+            return this.publicUrl + "?spotify-auth=success";
         }
-        return "FAILED";
+        return this.publicUrl + "?spotify-auth=failed";
     }
 
     public async getAccessToken(): Promise<void> {

@@ -49,7 +49,8 @@
   <p-dataView [value]="spotifyResults">
     <ng-template let-item pTemplate="listItem">
         <div class="spotify-item-row" (click)="connect(item)">
-            <img [src]="item.imageUrl"> {{item.name}}
+            <img class="spotify-item-icon" [src]="item.imageUrl"> 
+            <div class="spotify-item-title">{{item.name}}</div>
         </div>
     </ng-template>
   </p-dataView>
@@ -58,8 +59,8 @@
   <p-dataView [value]="musicTags">
     <ng-template let-tag pTemplate="listItem">
         <div class="music-tag-row">
-            {{tag.uid}} -> {{tag.name}}
-            <button type="button" pButton icon="pi pi-delete"  (click)="deleteMusicTag(tag)"></button>
+          <div class="music-tag-title">{{tag.uid}} -> {{tag.name}}</div>
+          <button class="music-tag-delete" type="button" pButton icon="pi pi-trash"  (click)="deleteMusicTag(tag)"></button>
         </div>
     </ng-template>
   </p-dataView>

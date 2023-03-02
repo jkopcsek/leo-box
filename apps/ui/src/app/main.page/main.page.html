@@ -8,17 +8,20 @@
     <div class="col-12 current-tag-and-music">
       <p-card [classList]="['rfid-scanner-card']">
         <div class="rfid-scanner-card-content">
-          <img *ngIf="!currentTag" class="rfid-scanner-icon" src="assets/rfid-icon.svg"/>
-          <div *ngIf="currentTag" class="rfid-card">
-            {{currentTag.uid}}
+          <img *ngIf="!currentState?.tag" class="rfid-scanner-icon" src="assets/rfid-icon.svg"/>
+          <div *ngIf="currentState?.tag" class="rfid-card">
+            {{currentState?.tag?.uid}}
           </div>
         </div>
       </p-card>
       <i class="tag-to-music-icon pi pi-chevron-right"></i>
       <p-card [classList]="['rfid-scanner-card']">
         <div class="rfid-scanner-card-content">
-          <img *ngIf="!currentTag" class="rfid-scanner-icon" src="assets/sound-waves.svg"/>
-          
+          <img *ngIf="!currentState?.currentlyPlaying" class="rfid-scanner-icon" src="assets/sound-waves.svg"/>
+          <div *ngIf="currentState?.currentlyPlaying" class="music-card">
+            <img class="music-tag-icon" [src]="currentState?.currentlyPlaying?.imageUrl"> 
+            <div class="music-tag-title">{{currentState?.currentlyPlaying?.name}}</div>
+          </div>
         </div>
       </p-card>
     </div>
@@ -46,19 +49,20 @@
     <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn" (click)="searchSpotify(spotifyQuery.value)"></button>      
   </div>
 
-  <p-dataView [value]="spotifyResults">
+  <p-dataView [value]="spotifyResults" class="spotify-item-list">
     <ng-template let-item pTemplate="listItem">
-        <div class="spotify-item-row" (click)="connect(item)">
+        <div class="spotify-item-row" [class.spotify-item-active]="currentState?.currentlyPlaying?.uri === item.uri">
             <img class="spotify-item-icon" [src]="item.imageUrl"> 
             <div class="spotify-item-title">{{item.name}}</div>
+            <button class="spotify-item-link" type="button" pButton icon="pi pi-link" (click)="connect(item)"></button>
         </div>
     </ng-template>
   </p-dataView>
   
   <h3>Music Tags</h3>
-  <p-dataView [value]="musicTags">
+  <p-dataView [value]="musicTags" class="music-tag-list">
     <ng-template let-tag pTemplate="listItem">
-        <div class="music-tag-row">
+        <div class="music-tag-row" [class.music-tag-active]="currentState?.tag?.uid === tag.uid">
           <img class="music-tag-icon" [src]="tag.imageUrl"> 
           <div class="music-tag-title">{{tag.uid}} -> {{tag.name}}</div>
           <button class="music-tag-delete" type="button" pButton icon="pi pi-trash"  (click)="deleteMusicTag(tag)"></button>

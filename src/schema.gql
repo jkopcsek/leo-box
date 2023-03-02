@@ -2,6 +2,29 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type PlayableObject {
+  uri: String!
+  type: String!
+  name: String!
+  imageUrl: String!
+}
+
+type PositionObject {
+  trackUri: String!
+  positionMs: Float!
+}
+
+type TagObject {
+  uid: String!
+}
+
+type StateObject {
+  tag: TagObject
+  currentlyPlaying: PlayableObject
+  lastPlayed: PlayableObject
+  lastPosition: PositionObject
+}
+
 type MusicTagObject {
   uid: String!
   createdAt: Timestamp!
@@ -17,8 +40,15 @@ type MusicTagObject {
 """
 scalar Timestamp
 
-type TagObject {
-  uid: String!
+type SonosItemObject {
+  type: String!
+  name: String!
+  uri: String!
+  imageUrl: String
+}
+
+type SonosAuthObject {
+  url: String!
 }
 
 type SpotifyItemObject {
@@ -32,20 +62,10 @@ type SpotifyAuthObject {
   url: String!
 }
 
-type SonosItemObject {
-  type: String!
-  name: String!
-  uri: String!
-  imageUrl: String
-}
-
-type SonosAuthObject {
-  url: String!
-}
-
 type Query {
   musicTags: [MusicTagObject!]
   currentTag: TagObject
+  currentState: StateObject!
   spotifyAuth: SpotifyAuthObject!
   spotifySearch(query: String!, type: String!): [SpotifyItemObject!]!
   spotifyTracks(albumId: String!): [SpotifyItemObject!]!
@@ -58,6 +78,7 @@ type Mutation {
   updateMusicTag(uid: String!, data: MusicTagUpdateInput!): MusicTagObject!
   upsertMusicTag(uid: String!, data: MusicTagUpdateInput!): MusicTagObject!
   deleteMusicTag(uid: String!): MusicTagObject!
+  overrideTagUid(uid: String): TagObject!
 }
 
 input MusicTagCreateInput {

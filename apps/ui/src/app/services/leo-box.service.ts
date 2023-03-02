@@ -8,6 +8,25 @@ export interface Tag {
   uid: string;
 }
 
+export interface Playable {
+  uri: string;
+  type: string;
+  name: string;
+  imageUrl?: string;
+}
+
+export interface Position {
+  trackUri: string;
+  positionMs: number;
+}
+
+export interface State {
+  tag?: Tag;
+  currentlyPlaying?: Playable;
+  lastPlayed?: Playable;
+  lastPosition?: Position;
+}
+
 export interface MusicTag {
   uid: string;
   name: string;
@@ -31,19 +50,37 @@ export class LeoBoxService {
     this.apollo = this.apolloProvider;
   }
 
-  public watchQueryCurrentTag(): Observable<ApolloQueryResult<{currentTag: Tag}>> {
-    return this.apollo.watchQuery<{currentTag:Tag}>({
+  public watchQueryCurrentState(): Observable<ApolloQueryResult<{currentState: State}>> {
+    return this.apollo.watchQuery<{currentState:State}>({
       query: gql`{
-        currentTag {
-          uid
+        currentState {
+          tag {
+            uid
+          },
+          currentlyPlaying {
+            uri,
+            type,
+            name,
+            imageUrl
+          },
+          lastPlayed {
+            uri,
+            type,
+            name,
+            imageUrl
+          },
+          lastPosition {
+            trackUri,
+            positionMs
+          }
         }
       }`,
       pollInterval: 1000,
     }).valueChanges;
   }
  
-  public queryMusicTags(): Observable<ApolloQueryResult<{musicTags: MusicTag[]}>> {
-    return this.apollo.query({
+  public watchQueryMusicTags(): Observable<ApolloQueryResult<{musicTags: MusicTag[]}>> {
+    return this.apollo.watchQuery<{musicTags: MusicTag[]}>({
       query: gql`{
         musicTags {
           uid,
@@ -52,8 +89,9 @@ export class LeoBoxService {
           uri,
           imageUrl
         }
-      }`
-    });
+      }`,
+      pollInterval: 5000,
+    }).valueChanges;
   }
 
   public upsertMusicTag(uid: string, name: string, type: string, uri: string, imageUrl?: string): Observable<MutationResult<{upsertMusicTag: MusicTag}>> {

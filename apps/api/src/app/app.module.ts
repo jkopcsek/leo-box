@@ -4,21 +4,21 @@ import { Module } from '@nestjs/common';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
+import { ConfigurationService } from './leo-box/configuration.service';
 import { LeoBoxService } from './leo-box/leo-box-service';
+import { CurrentStateResolver } from './leo-box/resolvers/current-state.resolver';
+import { MusicTagResolver } from './leo-box/resolvers/music-tag.resolver';
+import { SonosResolver } from './leo-box/resolvers/sonos.resolver';
+import { SpotifyResolver } from './leo-box/resolvers/spotify.resolver';
 import { LeoBoxController } from './leo-box/rest/leo-box.controller';
+import { SonosController } from './leo-box/rest/sonos.controller';
 import { SpotifyAuthController } from './leo-box/rest/spotify-auth.controller';
 import { SpotifyController } from './leo-box/rest/spotify.controller';
+import { SonosService } from './leo-box/sonos.service';
 import { SpotifyMusicProvider } from './leo-box/spotify-music-provider';
 import { SpotifyService } from './leo-box/spotify.service';
-import { PrismaModule } from './prisma/prisma.module';
-import { MusicTagResolver } from './leo-box/resolvers/music-tag.resolver';
-import { CurrentTagResolver } from './leo-box/resolvers/current-tag.resolver';
 import { TagScanner } from './leo-box/tag-scanner';
-import { SpotifyResolver } from './leo-box/resolvers/spotify.resolver';
-import { SonosService } from './leo-box/sonos.service';
-import { SonosController } from './leo-box/rest/sonos.controller';
-import { SonosResolver } from './leo-box/resolvers/sonos.resolver';
-import { ConfigurationService } from './leo-box/configuration.service';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -33,6 +33,6 @@ import { ConfigurationService } from './leo-box/configuration.service';
     }),
   ],
   controllers: [LeoBoxController, SpotifyAuthController, SpotifyController, SonosController],
-  providers: [ConfigurationService, LeoBoxService, SpotifyService, SpotifyMusicProvider, SonosService, MusicTagResolver, CurrentTagResolver, SpotifyResolver, SonosResolver, TagScanner],
+  providers: [ConfigurationService, LeoBoxService, SpotifyService, SpotifyMusicProvider, SonosService, MusicTagResolver, CurrentStateResolver, SpotifyResolver, SonosResolver, TagScanner],
 })
 export class AppModule {}

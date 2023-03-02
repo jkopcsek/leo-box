@@ -10,10 +10,12 @@ export type Tag = { uid: string };
 @Injectable()
 export class TagScanner implements OnApplicationBootstrap, OnApplicationShutdown {
     public currentTag = new BehaviorSubject<Tag | undefined>(undefined);
+    public overrideTagUid?: string;
 
     private softSPI: SoftSPI;
     private mfrc522: Mfrc522;
     private timer?: NodeJS.Timer;
+
 
     constructor() {
         this.softSPI = new SoftSPI({
@@ -45,9 +47,9 @@ export class TagScanner implements OnApplicationBootstrap, OnApplicationShutdown
     }
 
     private check(): void {
-        const currentTagUid = this.readTagUid();
+        const currentTagUid = this.overrideTagUid ?? this.readTagUid();
         if (currentTagUid !== this.currentTag.value?.uid) {
-            console.log("Identified tag: "+currentTagUid);
+            console.log("Identified tag: "+currentTagUid+" (override: "+this.overrideTagUid+")");
             this.currentTag.next( currentTagUid ? { uid: currentTagUid } : undefined );
         }
     }

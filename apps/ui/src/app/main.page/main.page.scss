@@ -32,6 +32,23 @@ main {
       justify-content: center;
       align-items: center;
     }
+
+    .music-card {
+      width: 80%;
+      height: 80%;
+      display: flex;
+      background: #546378;
+      box-shadow: 0 2px 1px -1px #0003, 0 1px 1px #00000024, 0 1px 3px #0000001f;
+      border-radius: 6px;
+      padding: 8px;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .music-tag-icon {
+        padding: 8px;
+      }
+    }
   }
 
   .tag-to-music-icon {
@@ -48,19 +65,25 @@ main {
   }
 }
 
-.spotify-item-row, .music-tag-row {
+.spotify-item-list .spotify-item-row, 
+.music-tag-list .music-tag-row {
   padding: 8px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  &.spotify-item-active,
+  &.music-tag-active {
+    background-color: #546378;
+  }
 
   &:hover {
     background-color: #175982;
   }
 }
 
-.spotify-item-title, .music-tag-title {
+.spotify-item-list .spotify-item-title, 
+.music-tag-list .music-tag-title {
   padding: 8px 16px;
   flex-grow: 1;
 }

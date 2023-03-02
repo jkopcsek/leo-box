@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { lastValueFrom, Subscription } from 'rxjs';
-import { LeoBoxService, MusicTag, SpotifyItem, Tag } from '../services/leo-box.service';
+import { LeoBoxService, MusicTag, SpotifyItem, State, Tag } from '../services/leo-box.service';
 
 @Component({
   selector: 'ui-main.page',
@@ -8,7 +8,7 @@ import { LeoBoxService, MusicTag, SpotifyItem, Tag } from '../services/leo-box.s
   styleUrls: ['./main.page.scss'],
 })
 export class MainPage implements OnInit, OnDestroy {
-  public currentTag?: Tag;
+  public currentState?: State;
   public musicTags: MusicTag[] = []
   public spotifyResults: SpotifyItem[] = []
   public sonosResults: SpotifyItem[] = []
@@ -31,13 +31,13 @@ export class MainPage implements OnInit, OnDestroy {
   }
 
   public async subscribeCurrentTag(): Promise<Subscription> {
-    return this.leoBoxService.watchQueryCurrentTag().subscribe((response) => {
-      this.currentTag = response.data.currentTag;
+    return this.leoBoxService.watchQueryCurrentState().subscribe((response) => {
+      this.currentState = response.data.currentState;
     });
   }
 
   public async subscribeMusicTags(): Promise<Subscription> {
-    return this.leoBoxService.queryMusicTags().subscribe((response) => {
+    return this.leoBoxService.watchQueryMusicTags().subscribe((response) => {
       this.musicTags = response.data.musicTags;
     });
   }
@@ -63,11 +63,11 @@ export class MainPage implements OnInit, OnDestroy {
   }
 
   public async connect(item: SpotifyItem) {
-    if (!this.currentTag?.uid) {
+    if (!this.currentState?.tag?.uid) {
       return;
     }
 
-    await lastValueFrom(this.leoBoxService.upsertMusicTag(this.currentTag.uid, item.name,
+    await lastValueFrom(this.leoBoxService.upsertMusicTag(this.currentState?.tag?.uid, item.name,
       item.type, item.uri, item.imageUrl));
   }
   

@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from "@nestjs/common";
+import { GoneException, Injectable } from "@nestjs/common";
 import QueryString from "qs";
 import { lastValueFrom } from 'rxjs';
 import { ConfigurationService } from './configuration.service';
@@ -82,6 +82,12 @@ const SPOTIFY_AUTH_CODE = 'SPOTIFY_AUTH_CODE';
 const SPOTIFY_ACCESS_TOKEN = 'SPOTIFY_ACCESS_TOKEN';
 const SPOTIFY_REFRESH_TOKEN = 'SPOTIFY_REFRESH_TOKEN';
 
+class NoRefreshTokenException extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
+
 @Injectable()
 export class SpotifyService {
     private clientId = process.env.SPOTIFY_CLIENT_ID;
@@ -141,6 +147,9 @@ export class SpotifyService {
 
     public async refreshToken(): Promise<void> {
         const refreshToken = await this.configuration.get(SPOTIFY_REFRESH_TOKEN);
+        if (!refreshToken) {
+            throw new NoRefreshTokenException("No refresh token set");
+        }
         const queryString = QueryString.stringify({
             grant_type: "refresh_token",
             refresh_token: refreshToken,
@@ -218,7 +227,7 @@ export class SpotifyService {
             return await this.request('get', path, undefined, params);
         } catch (error) {
             console.error(error);
-            if (error.response.statusCode === 401) {
+            if (error.response.status === 401) {
                 await this.refreshToken();
                 return await this.request('get', path, undefined, params);
             }
@@ -232,7 +241,7 @@ export class SpotifyService {
         } catch (error) {
             console.error(error);
             console.error(error.response.data.error);
-            if (error.response.statusCode === 401) {
+            if (error.response.status === 401) {
                 await this.refreshToken();
                 return await this.request('put', path, data, params);
             }

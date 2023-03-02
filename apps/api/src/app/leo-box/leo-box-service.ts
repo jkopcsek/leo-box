@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Subscribable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import { PrismaService } from "../prisma/prisma.service";
 import { Playable, Position } from "./music-provider";
 import { SpotifyMusicProvider } from "./spotify-music-provider";
@@ -23,13 +23,17 @@ export class LeoBoxService {
     }
 
     public async tagChanged(tagUid?: string): Promise<void> {
-        const playable = tagUid ? (await this.getMusicTagByUid(tagUid)) : undefined;
-        if (playable) {
-            console.log("Found playable "+playable+" from tag "+tagUid+": starting");
-            await this.startPlaying(playable);
-        } else {
-            console.log("Found no playable from tag "+tagUid+": stopping");
-            await this.stopPlaying();
+        try {
+            const playable = tagUid ? (await this.getMusicTagByUid(tagUid)) : undefined;
+            if (playable) {
+                console.log("Found playable "+playable+" from tag "+tagUid+": starting");
+                await this.startPlaying(playable);
+            } else {
+                console.log("Found no playable from tag "+tagUid+": stopping");
+                await this.stopPlaying();
+            }
+        } catch (error) {
+            console.error("An error occured while reacting to a tag change: ", error);
         }
     }
 

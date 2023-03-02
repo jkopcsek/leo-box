@@ -39,9 +39,9 @@ export class LeoBoxService {
 
     public async startPlaying(playable: Playable): Promise<void> {
         if (playable) {
-            if (this.currentlyPlaying.uri === playable.uri) {
+            if (this.currentlyPlaying?.uri === playable.uri) {
                 return;
-            } else if (this.lastPlayed.uri === playable.uri && this.lastMusicPosition) {
+            } else if (this.lastPlayed?.uri === playable.uri && this.lastMusicPosition) {
                 // continue
                 await this.musicProvider.contine(playable, this.lastMusicPosition);
             } else {

@@ -242,7 +242,6 @@ export class SpotifyService {
 
     private async request<T>(method: string, path: string, data: object, params?: Record<string, string>): Promise<T> {
         const accessToken = await this.configuration.get(SPOTIFY_ACCESS_TOKEN);
-        console.log({path, method, data, params});
         const result = await lastValueFrom(this.http.request({
             baseURL: 'https://api.spotify.com/v1',
             url: path,
@@ -255,6 +254,7 @@ export class SpotifyService {
                 Accept: 'application/json',
             },
         }));
+        console.log({request : {path, method, data, params}, response: result.data});
         return result.data;
     }
 }

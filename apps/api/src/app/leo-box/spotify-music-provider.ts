@@ -1,18 +1,12 @@
-/**
- * This is an example of a basic node.js script that performs
- * the Client Credentials oAuth2 flow to authenticate against
- * the Spotify Accounts.
- *
- * For more information, read
- * https://developer.spotify.com/web-api/authorization-guide/#client_credentials_flow
- */
 
-import { Injectable } from '@nestjs/common';
+
+import { Injectable, Logger } from '@nestjs/common';
 import { CurrentlyPlaying, MusicProvider, Playable, Position } from './music-provider';
 import { AlbumResponse, AudioBookResponse, ImageResponse, PlaylistResponse, SpotifyService, TrackResponse } from './spotify.service';
 
 @Injectable()
 export class SpotifyMusicProvider implements MusicProvider {
+  private readonly logger = new Logger(SpotifyMusicProvider.name);
 
   constructor(private readonly spotifyService: SpotifyService) {
   }
@@ -44,14 +38,14 @@ export class SpotifyMusicProvider implements MusicProvider {
   }
 
   public async contine(playable: Playable, position: Position): Promise<void> {
-    console.log("Continue with: "+JSON.stringify({uri: playable.uri, position}));
+    this.logger.log("Continue with: "+JSON.stringify({uri: playable.uri, position}));
     await this.spotifyService.play(playable.uri, position.trackUri, position.positionMs);
   }
 
   public async stop(playable: Playable): Promise<Position> {
     const currentlyPlaying = await this.spotifyService.getCurrentlyPlaying();
     await this.spotifyService.pause();
-    console.log("Stopped at: "+JSON.stringify({ trackUri: currentlyPlaying.item.uri, positionMs: currentlyPlaying.progress_ms }));
+    this.logger.log("Stopped at: "+JSON.stringify({ trackUri: currentlyPlaying.item.uri, positionMs: currentlyPlaying.progress_ms }));
     return { trackUri: currentlyPlaying.item.uri, positionMs: currentlyPlaying.progress_ms };
   }
 

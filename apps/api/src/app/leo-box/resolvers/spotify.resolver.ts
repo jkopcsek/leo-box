@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import {
   Args, Field, ObjectType, Query, Resolver
 } from '@nestjs/graphql';
@@ -29,6 +29,8 @@ export class SpotifyAuthObject {
 
 @Resolver(SpotifyItemObject, {})
 export class SpotifyResolver {
+  private readonly logger = new Logger(SpotifyResolver.name);
+
   constructor(@Inject(SpotifyService) private readonly spotifyService: SpotifyService) {
   }
 

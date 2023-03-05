@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { Subscription } from "rxjs";
 import { PrismaService } from "../prisma/prisma.service";
 import { Playable, Position } from "./music-provider";
@@ -11,6 +11,8 @@ export class LeoBoxService {
 
     public lastPlayed?: Playable;
     public lastMusicPosition?: Position;
+
+    private readonly logger = new Logger(LeoBoxService.name);
 
     private tagScannerSubscription: Subscription;
 
@@ -26,14 +28,14 @@ export class LeoBoxService {
         try {
             const playable = tagUid ? (await this.getMusicTagByUid(tagUid)) : undefined;
             if (playable) {
-                console.log("Found playable "+playable+" from tag "+tagUid+": starting");
+                this.logger.log("Found playable "+playable+" from tag "+tagUid+": starting");
                 await this.startPlaying(playable);
             } else {
-                console.log("Found no playable from tag "+tagUid+": stopping");
+                this.logger.log("Found no playable from tag "+tagUid+": stopping");
                 await this.stopPlaying();
             }
         } catch (error) {
-            console.error("An error occured while reacting to a tag change: ", error);
+            this.logger.error("An error occured while reacting to a tag change: ", error);
         }
     }
 

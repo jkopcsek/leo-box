@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common'
+import { Inject, Logger } from '@nestjs/common'
 import {
     Args,
     Context, Field, InputType, Mutation, Query, Resolver
@@ -43,6 +43,8 @@ class MusicTagUpdateInput {
 
 @Resolver(MusicTagObject)
 export class MusicTagResolver {
+    private readonly logger = new Logger(MusicTagResolver.name);
+
     constructor(@Inject(PrismaService) private prisma: PrismaService) { }
 
     @Query((returns) => [MusicTagObject], { nullable: true })

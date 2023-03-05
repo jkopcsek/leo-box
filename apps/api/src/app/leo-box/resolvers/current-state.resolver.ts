@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common'
+import { Inject, Logger } from '@nestjs/common'
 import {
   Args,
   Context, Mutation, Query, Resolver, Subscription
@@ -14,6 +14,8 @@ const pubSub = new PubSub();
 
 @Resolver(TagObject)
 export class CurrentStateResolver {
+  private readonly logger = new Logger(CurrentStateResolver.name);
+
   constructor(
     @Inject(TagScanner) private readonly tagScanner: TagScanner, 
     @Inject(LeoBoxService) private readonly leobox: LeoBoxService

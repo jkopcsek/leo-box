@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { GoneException, Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import QueryString from "qs";
 import { lastValueFrom } from 'rxjs';
 import { ConfigurationService } from './configuration.service';
@@ -90,6 +90,7 @@ class NoRefreshTokenException extends Error {
 
 @Injectable()
 export class SpotifyService {
+    private readonly logger = new Logger(SpotifyService.name);
     private clientId = process.env.SPOTIFY_CLIENT_ID;
     private clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
     private redirectUri = process.env.SPOTIFY_AUTH_REDIRECT_URL;
@@ -141,7 +142,7 @@ export class SpotifyService {
             this.configuration.set(SPOTIFY_ACCESS_TOKEN, response.data.access_token);
             this.configuration.set(SPOTIFY_REFRESH_TOKEN, response.data.refresh_token);
         } else {
-            console.error(response);
+            this.logger.error(response);
         }
     }
 
@@ -165,7 +166,7 @@ export class SpotifyService {
         if (response.status === 200) {
             this.configuration.set(SPOTIFY_ACCESS_TOKEN, response.data.access_token);
         } else {
-            console.error(response);
+            this.logger.error(response);
         }
     }
 
@@ -191,8 +192,8 @@ export class SpotifyService {
                 device_id: deviceId ?? DEFAULT_DEVICE_ID,
             });
         } catch (error) {
-            console.error(error);
-            console.error(error.response.data.error);
+            this.logger.error(error);
+            this.logger.error(error.response.data.error);
             throw error;
         }
     }
@@ -226,7 +227,7 @@ export class SpotifyService {
         try {
             return await this.request('get', path, undefined, params);
         } catch (error) {
-            console.error(error);
+            this.logger.error(error);
             if (error.response.status === 401) {
                 await this.refreshToken();
                 return await this.request('get', path, undefined, params);
@@ -239,8 +240,8 @@ export class SpotifyService {
         try {
             return await this.request('put', path, data, params);
         } catch (error) {
-            console.error(error);
-            console.error(error.response.data.error);
+            this.logger.error(error);
+            this.logger.error(error.response.data.error);
             if (error.response.status === 401) {
                 await this.refreshToken();
                 return await this.request('put', path, data, params);
@@ -263,7 +264,7 @@ export class SpotifyService {
                 Accept: 'application/json',
             },
         }));
-        console.log({request : {path, method, data, params}, response: result.data});
+        this.logger.log({request : {path, method, data, params}, response: result.data});
         return result.data;
     }
 }

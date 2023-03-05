@@ -1,6 +1,6 @@
 /// <reference path="../mfrc522-rpi/mfrc522-rpi.d.ts"/>
 /// <reference path="../rpi-softspi/rpi-softspi.d.ts"/>
-import { Injectable, OnApplicationBootstrap, OnApplicationShutdown } from '@nestjs/common';
+import { Injectable, Logger, OnApplicationBootstrap, OnApplicationShutdown } from '@nestjs/common';
 import Mfrc522 from 'mfrc522-rpi';
 import SoftSPI from 'rpi-softspi';
 import { BehaviorSubject } from 'rxjs';
@@ -12,6 +12,7 @@ export class TagScanner implements OnApplicationBootstrap, OnApplicationShutdown
     public currentTag = new BehaviorSubject<Tag | undefined>(undefined);
     public overrideTagUid?: string;
 
+    private readonly logger = new Logger(TagScanner.name);
     private softSPI: SoftSPI;
     private mfrc522: Mfrc522;
     private timer?: NodeJS.Timer;
@@ -49,7 +50,7 @@ export class TagScanner implements OnApplicationBootstrap, OnApplicationShutdown
     private check(): void {
         const currentTagUid = this.overrideTagUid ?? this.readTagUid();
         if (currentTagUid !== this.currentTag.value?.uid) {
-            console.log("Identified tag: "+currentTagUid+" (override: "+this.overrideTagUid+")");
+            this.logger.log("Identified tag: "+currentTagUid+" (override: "+this.overrideTagUid+")");
             this.currentTag.next( currentTagUid ? { uid: currentTagUid } : undefined );
         }
     }
@@ -67,7 +68,7 @@ export class TagScanner implements OnApplicationBootstrap, OnApplicationShutdown
         //# Get the UID of the card
         const response2 = this.mfrc522.getUid();
         if (!response2.status) {
-            console.log("UID Scan Error");
+            this.logger.log("UID Scan Error");
             return;
         }
         //# If we have the UID, continue

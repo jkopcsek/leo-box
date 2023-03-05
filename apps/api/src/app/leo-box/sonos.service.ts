@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import QueryString from "qs";
 import { lastValueFrom } from 'rxjs';
 import { ConfigurationService } from './configuration.service';
@@ -177,6 +177,8 @@ const SONOS_REFRESH_TOKEN = "SONOS_REFRESH_TOKEN";
 
 @Injectable()
 export class SonosService {
+    private readonly logger = new Logger(SonosService.name);
+
     private clientId = process.env.SONOS_CLIENT_ID;
     private clientSecret = process.env.SONOS_CLIENT_SECRET;
     private redirectUri = 'http://localhost:8080/sonos/callback/';
@@ -228,7 +230,7 @@ export class SonosService {
             this.configuration.set(SONOS_ACCESS_TOKEN, response.data.access_token);
             this.configuration.set(SONOS_REFRESH_TOKEN, response.data.refresh_token);
         } else {
-            console.error(response);
+            this.logger.error(response);
         }
     }
 
@@ -250,7 +252,7 @@ export class SonosService {
             this.configuration.set(SONOS_ACCESS_TOKEN, response.data.access_token);
             this.configuration.set(SONOS_REFRESH_TOKEN, response.data.refresh_token);
         } else {
-            console.error(response);
+            this.logger.error(response);
         }
     }
     
@@ -280,11 +282,11 @@ export class SonosService {
                     Accept: 'application/json',
                 }
             }));
-            console.log(response);
+            this.logger.log(response);
             return response.data;
         } catch (error) {
-            console.log(error);
-            console.log(error.response.data.fault);
+            this.logger.log(error);
+            this.logger.log(error.response.data.fault);
         }
     }
 
@@ -300,7 +302,7 @@ export class SonosService {
             }));
             return response.data;
         } catch (error) {
-            console.log(error);
+            this.logger.log(error);
             throw error;
         }
     }

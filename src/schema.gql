@@ -78,7 +78,7 @@ type Mutation {
   updateMusicTag(uid: String!, data: MusicTagUpdateInput!): MusicTagObject!
   upsertMusicTag(uid: String!, data: MusicTagUpdateInput!): MusicTagObject!
   deleteMusicTag(uid: String!): MusicTagObject!
-  overrideTagUid(uid: String): TagObject!
+  overrideTagUid(uid: String): TagObject
 }
 
 input MusicTagCreateInput {

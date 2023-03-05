@@ -29,7 +29,7 @@ export class LeoBoxService {
                 await this.startPlaying(musicTag);
             } else {
                 this.logger.log("Found no playable from tag "+tagUid+": stopping");
-                await this.stopPlaying(tagUid);
+                await this.stopPlaying();
             }
         } catch (error) {
             this.logger.error("An error occured while reacting to a tag change: ", error);
@@ -55,18 +55,19 @@ export class LeoBoxService {
         }
     }
 
-    public async stopPlaying(tagUid?: string) {
+    public async stopPlaying() {
         if (this.currentlyPlaying) {
             const lastPosition = await this.musicProvider.stop(this.currentlyPlaying);
-            this.currentlyPlaying = undefined;
             
             await this.prisma.musicTag.update({
-                where: { uid: tagUid },
+                where: { uid: this.currentlyPlaying.uid },
                 data: {
                     lastTrackUri: lastPosition.trackUri,
                     lastPositionMs: lastPosition.positionMs,
                 }
             });
+
+            this.currentlyPlaying = undefined;
         }
     }
 }

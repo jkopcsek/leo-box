@@ -33,8 +33,6 @@ export class CurrentStateResolver {
     return {
       tag: this.tagScanner.currentTag.value,
       currentlyPlaying: this.leobox.currentlyPlaying,
-      lastPlayed: this.leobox.lastPlayed,
-      lastPosition: this.leobox.lastMusicPosition,
     };
   }
 

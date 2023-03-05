@@ -1,16 +1,13 @@
+import { MusicTag } from ".prisma/client";
 import { Injectable, Logger } from "@nestjs/common";
 import { Subscription } from "rxjs";
 import { PrismaService } from "../prisma/prisma.service";
-import { Playable, Position } from "./music-provider";
 import { SpotifyMusicProvider } from "./spotify-music-provider";
 import { TagScanner } from "./tag-scanner";
 
 @Injectable()
 export class LeoBoxService {
-    public currentlyPlaying?: Playable;
-
-    public lastPlayed?: Playable;
-    public lastMusicPosition?: Position;
+    public currentlyPlaying?: MusicTag;
 
     private readonly logger = new Logger(LeoBoxService.name);
 
@@ -26,45 +23,50 @@ export class LeoBoxService {
 
     public async tagChanged(tagUid?: string): Promise<void> {
         try {
-            const playable = tagUid ? (await this.getMusicTagByUid(tagUid)) : undefined;
-            if (playable) {
-                this.logger.log("Found playable "+playable+" from tag "+tagUid+": starting");
-                await this.startPlaying(playable);
+            const musicTag = tagUid ? (await this.getMusicTagByUid(tagUid)) : undefined;
+            if (musicTag) {
+                this.logger.log("Found playable "+musicTag+" from tag "+tagUid+": starting");
+                await this.startPlaying(musicTag);
             } else {
                 this.logger.log("Found no playable from tag "+tagUid+": stopping");
-                await this.stopPlaying();
+                await this.stopPlaying(tagUid);
             }
         } catch (error) {
             this.logger.error("An error occured while reacting to a tag change: ", error);
         }
     }
 
-    public async getMusicTagByUid(uid: string): Promise<Playable | undefined> {
+    public async getMusicTagByUid(uid: string): Promise<MusicTag | undefined> {
         return await this.prisma.musicTag.findUnique({ where: { uid } });
     }
 
-    public async startPlaying(playable: Playable): Promise<void> {
-        if (playable) {
-            if (this.currentlyPlaying?.uri === playable.uri) {
+    public async startPlaying(musicTag: MusicTag): Promise<void> {
+        if (musicTag) {
+            if (this.currentlyPlaying?.uri === musicTag.uri) {
                 return;
-            } else if (this.lastPlayed?.uri === playable.uri && this.lastMusicPosition) {
+            } else if (musicTag.lastTrackUri) {
                 // continue
-                await this.musicProvider.contine(playable, this.lastMusicPosition);
+                await this.musicProvider.contine(musicTag, {trackUri: musicTag.lastTrackUri, positionMs: musicTag.lastPositionMs });
             } else {
                 // start from beginning
-                await this.musicProvider.play(playable);
+                await this.musicProvider.play(musicTag);
             }
-            this.currentlyPlaying = playable;
-            this.lastPlayed = undefined;
-            this.lastMusicPosition = undefined;
+            this.currentlyPlaying = musicTag;
         }
     }
 
-    public async stopPlaying() {
+    public async stopPlaying(tagUid?: string) {
         if (this.currentlyPlaying) {
-            this.lastPlayed = this.currentlyPlaying;
-            this.lastMusicPosition = await this.musicProvider.stop(this.currentlyPlaying);
+            const lastPosition = await this.musicProvider.stop(this.currentlyPlaying);
             this.currentlyPlaying = undefined;
+            
+            await this.prisma.musicTag.update({
+                where: { uid: tagUid },
+                data: {
+                    lastTrackUri: lastPosition.trackUri,
+                    lastPositionMs: lastPosition.positionMs,
+                }
+            });
         }
     }
 }

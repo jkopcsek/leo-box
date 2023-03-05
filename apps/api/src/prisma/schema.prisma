@@ -36,5 +36,8 @@ model MusicTag {
   uri String
   imageUrl   String?
 
+  lastTrackUri String? @map("last_track_uri")
+  lastPositionMs Int? @map("last_position_ms")
+
   @@map("music_tag")
 }

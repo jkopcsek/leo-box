@@ -7,6 +7,7 @@ import { join } from 'path';
 import { ConfigurationService } from './leo-box/configuration.service';
 import { LeoBoxService } from './leo-box/leo-box-service';
 import { CurrentStateResolver } from './leo-box/resolvers/current-state.resolver';
+import { MusicControlsResolver } from './leo-box/resolvers/music-control.resolver';
 import { MusicTagResolver } from './leo-box/resolvers/music-tag.resolver';
 import { SonosResolver } from './leo-box/resolvers/sonos.resolver';
 import { SpotifyResolver } from './leo-box/resolvers/spotify.resolver';
@@ -33,6 +34,6 @@ import { PrismaModule } from './prisma/prisma.module';
     }),
   ],
   controllers: [LeoBoxController, SpotifyAuthController, SpotifyController, SonosController],
-  providers: [ConfigurationService, LeoBoxService, SpotifyService, SpotifyMusicProvider, SonosService, MusicTagResolver, CurrentStateResolver, SpotifyResolver, SonosResolver, TagScanner],
+  providers: [ConfigurationService, LeoBoxService, SpotifyService, SpotifyMusicProvider, SonosService, MusicTagResolver, CurrentStateResolver, SpotifyResolver, SonosResolver, MusicControlsResolver, TagScanner],
 })
 export class AppModule {}

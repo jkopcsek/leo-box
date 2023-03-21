@@ -187,4 +187,64 @@ export class LeoBoxService {
       }`
     });
   }
+
+  //#region Music Controls
+  public fastForward(): Observable<MutationResult<{result: string, error?: string}>> {
+    return this.apollo.mutate({
+      mutation: gql`mutation fastForward {
+        fastForward {
+          result
+          error
+        }
+      }`
+    });
+  }
+
+  public fastBackward(): Observable<MutationResult<{result: string, error?: string}>> {
+    return this.apollo.mutate({
+      mutation: gql`mutation fastBackward {
+        fastBackward {
+          result
+          error
+        }
+      }`
+    });
+  }
+
+  public play(item: SpotifyItem | MusicTag): Observable<MutationResult<{result: string, error?: string}>> {
+      return this.apollo.mutate({
+        mutation: gql`mutation play($uri: String!) {
+          play(uri: $uri) {
+            result
+            error
+          }
+        }`,
+        variables: {
+          uri: item.uri
+        }
+      });    
+  }
+
+  public resume(): Observable<MutationResult<{result: string, error?: string}>> {
+    return this.apollo.mutate({
+      mutation: gql`mutation resume {
+        resume {
+          result
+          error
+        }
+      }`
+    });
+  }
+
+  public pause(): Observable<MutationResult<{result: string, error?: string}>> {
+    return this.apollo.mutate({
+      mutation: gql`mutation pause {
+        pause {
+          result
+          error
+        }
+      }`
+    });
+  }
+  //#endregion
 }

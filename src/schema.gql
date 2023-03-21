@@ -25,6 +25,11 @@ type StateObject {
   lastPosition: PositionObject
 }
 
+type MusicControlResult {
+  result: String!
+  error: String!
+}
+
 type MusicTagObject {
   uid: String!
   createdAt: Timestamp!
@@ -79,6 +84,11 @@ type Mutation {
   upsertMusicTag(uid: String!, data: MusicTagUpdateInput!): MusicTagObject!
   deleteMusicTag(uid: String!): MusicTagObject!
   overrideTagUid(uid: String): TagObject
+  fastForward: MusicControlResult!
+  fastBackward: MusicControlResult!
+  play(uri: String!): MusicControlResult!
+  resume: MusicControlResult!
+  pause: MusicControlResult!
 }
 
 input MusicTagCreateInput {

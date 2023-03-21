@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from "@nestjs/common";
+import { GoneException, Injectable, Logger } from "@nestjs/common";
 import QueryString from "qs";
 import { lastValueFrom } from 'rxjs';
 import { ConfigurationService } from './configuration.service';
@@ -182,6 +182,14 @@ export class SpotifyService {
         return this.getAll<ListResponse<TrackResponse>, TrackResponse>(`/albums/${albumId}/tracks`);
     }
 
+    public async fastForward(): Promise<void> {
+        return this.post('/me/player/next', {});
+    }
+
+    public async fastBackward(): Promise<void> {
+        return this.post('/me/player/previous', {});
+    }
+
     public async play(contextUri?: string, offsetUri?: string, positionMs?: number, deviceId?: string): Promise<void> {
         try {
             await this.put('/me/player/play', {
@@ -196,6 +204,10 @@ export class SpotifyService {
             this.logger.error(error.response.data.error);
             throw error;
         }
+    }
+
+    public async resume(): Promise<void> {
+        return this.put('/me/player/play', {});
     }
 
     public async pause(): Promise<void> {
@@ -245,6 +257,20 @@ export class SpotifyService {
             if (error.response.status === 401) {
                 await this.refreshToken();
                 return await this.request('put', path, data, params);
+            }
+            throw error;
+        }
+    }
+
+    private async post<T>(path: string, data: object, params?: Record<string, string>): Promise<T> {
+        try {
+            return await this.request('post', path, data, params);
+        } catch (error) {
+            this.logger.error(error);
+            this.logger.error(error.response.data.error);
+            if (error.response.status === 401) {
+                await this.refreshToken();
+                return await this.request('post', path, data, params);
             }
             throw error;
         }

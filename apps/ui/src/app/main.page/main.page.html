@@ -1,6 +1,12 @@
 <nav>
   <header>
     <h1>LEO BOX - Raawwrr</h1>
+    <div class="buttons">
+      <button type="button" pButton icon="pi pi-fast-backward" (click)="fastBackward()"></button>
+      <button type="button" pButton icon="pi pi-fast-forward" (click)="fastForward()"></button>
+      <button type="button" pButton icon="pi pi-play" (click)="resume()"></button>
+      <button type="button" pButton icon="pi pi-pause" (click)="pause()"></button>
+    </div>
   </header>
 </nav>
 <main>
@@ -54,7 +60,10 @@
         <div class="spotify-item-row" [class.spotify-item-active]="currentState?.currentlyPlaying?.uri === item.uri">
             <img class="spotify-item-icon" [src]="item.imageUrl"> 
             <div class="spotify-item-title">{{item.name}}</div>
-            <button class="spotify-item-link" type="button" pButton icon="pi pi-link" (click)="connect(item)"></button>
+            <div class="buttons">
+              <button type="button" pButton icon="pi pi-play" (click)="play(item)"></button>
+              <button class="spotify-item-link" type="button" pButton icon="pi pi-link" (click)="connect(item)"></button>
+            </div>
         </div>
     </ng-template>
   </p-dataView>
@@ -65,7 +74,11 @@
         <div class="music-tag-row" [class.music-tag-active]="currentState?.tag?.uid === tag.uid">
           <img class="music-tag-icon" [src]="tag.imageUrl"> 
           <div class="music-tag-title">{{tag.uid}} -> {{tag.name}}</div>
-          <button class="music-tag-delete" type="button" pButton icon="pi pi-trash"  (click)="deleteMusicTag(tag)"></button>
+          <div class="buttons">
+            <button type="button" pButton icon="pi pi-play" (click)="play(tag)"></button>
+            <button class="music-tag-delete" type="button" pButton icon="pi pi-trash"  (click)="deleteMusicTag(tag)"></button>
+          </div>
+          
         </div>
     </ng-template>
   </p-dataView>

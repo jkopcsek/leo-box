@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { lastValueFrom, Subscription } from 'rxjs';
-import { LeoBoxService, MusicTag, SpotifyItem, State, Tag } from '../services/leo-box.service';
+import { LeoBoxService, MusicTag, SpotifyItem, State } from '../services/leo-box.service';
 
 @Component({
   selector: 'ui-main.page',
@@ -26,8 +26,8 @@ export class MainPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      this.currentTagSubscription?.unsubscribe();
-      this.musicTagsSubscription?.unsubscribe();
+    this.currentTagSubscription?.unsubscribe();
+    this.musicTagsSubscription?.unsubscribe();
   }
 
   public async subscribeCurrentTag(): Promise<Subscription> {
@@ -70,8 +70,27 @@ export class MainPage implements OnInit, OnDestroy {
     await lastValueFrom(this.leoBoxService.upsertMusicTag(this.currentState?.tag?.uid, item.name,
       item.type, item.uri, item.imageUrl));
   }
-  
+
   public async deleteMusicTag(musicTag: MusicTag) {
     await lastValueFrom(this.leoBoxService.deleteMusicTag(musicTag.uid));
   }
+
+  //#region Music Controls
+  public async fastForward() {
+    return lastValueFrom(this.leoBoxService.fastForward());
+  }
+  public async fastBackward() {
+    return lastValueFrom(this.leoBoxService.fastBackward());
+  }
+  public async play(item: SpotifyItem | MusicTag) {
+    return lastValueFrom(this.leoBoxService.play(item))
+  }
+  public async resume() {
+    return lastValueFrom(this.leoBoxService.resume());
+  }
+  public async pause() {
+    return lastValueFrom(this.leoBoxService.pause());
+  }
+  //#endregion
+
 };

@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Put } from "@nestjs/common";
 import { ApiBody } from "@nestjs/swagger";
-import { LeoBoxService } from "../leo-box-service";
-import { Playable } from "../music-provider";
+import { LeoBoxService } from "../leo-box.service";
 import { MusicTagDto } from "./dto/music-tag.dto";
 
 @Controller('api/leo-box')

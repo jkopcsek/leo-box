@@ -1,7 +1,7 @@
 
 
 import { Injectable, Logger } from '@nestjs/common';
-import { CurrentlyPlaying, MusicProvider, Playable, Position } from './music-provider';
+import { MusicProvider, Playable, PlayablePosition, Position } from './music-provider';
 import { AlbumResponse, AudioBookResponse, ImageResponse, PlaylistResponse, SpotifyService, TrackResponse } from './spotify.service';
 
 @Injectable()
@@ -11,12 +11,13 @@ export class SpotifyMusicProvider implements MusicProvider {
   constructor(private readonly spotifyService: SpotifyService) {
   }
 
-  public async getCurrentlyPlaying(): Promise<CurrentlyPlaying> {
+  public async getCurrentlyPlaying(): Promise<PlayablePosition> {
     const playing = await this.spotifyService.getCurrentlyPlaying();
     return {
       playable: playing.item.album,
       position: {
         trackUri: playing.item.uri,
+        trackName: playing.item.name,
         positionMs: playing.progress_ms,
       }
     };
@@ -42,11 +43,11 @@ export class SpotifyMusicProvider implements MusicProvider {
     await this.spotifyService.play(playable.uri, position.trackUri, position.positionMs);
   }
 
-  public async stop(playable: Playable): Promise<Position> {
-    const currentlyPlaying = await this.spotifyService.getCurrentlyPlaying();
+  public async stop(playable: Playable): Promise<PlayablePosition | undefined> {
+    const currentlyPlaying = await this.getCurrentlyPlaying();
     await this.spotifyService.pause();
-    this.logger.log("Stopped at: "+JSON.stringify({ trackUri: currentlyPlaying.item.uri, positionMs: currentlyPlaying.progress_ms }));
-    return { trackUri: currentlyPlaying.item.uri, positionMs: currentlyPlaying.progress_ms };
+    this.logger.log("Stopped at: "+JSON.stringify(currentlyPlaying));
+    return currentlyPlaying;
   }
 
 

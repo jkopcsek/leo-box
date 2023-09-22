@@ -17,6 +17,7 @@ export interface Playable {
 
 export interface Position {
   trackUri: string;
+  trackName: string;
   positionMs: number;
 }
 
@@ -33,6 +34,9 @@ export interface MusicTag {
   type: string;
   uri: string;
   imageUrl?: string;
+  lastTrackUri?: string;
+  lastTrackName?: string;
+  lastPositionMs?: number;
 }
 
 export interface SpotifyItem {

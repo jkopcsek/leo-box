@@ -7,5 +7,6 @@ export class MusicTagDto {
     imageUrl: string | null;
     uri: string;
     lastTrackUri: string | null;
+    lastTrackName: string | null;
     lastPositionMs: number | null;
 }

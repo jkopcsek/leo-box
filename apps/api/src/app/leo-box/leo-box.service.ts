@@ -46,7 +46,7 @@ export class LeoBoxService {
                 return;
             } else if (musicTag.lastTrackUri) {
                 // continue
-                await this.musicProvider.contine(musicTag, {trackUri: musicTag.lastTrackUri, positionMs: musicTag.lastPositionMs });
+                await this.musicProvider.contine(musicTag, {trackUri: musicTag.lastTrackUri, trackName: musicTag.lastTrackName, positionMs: musicTag.lastPositionMs });
             } else {
                 // start from beginning
                 await this.musicProvider.play(musicTag);
@@ -55,17 +55,36 @@ export class LeoBoxService {
         }
     }
 
+    public async updatePosition() {
+        if (this.currentlyPlaying) {
+            const position = await this.musicProvider.getCurrentlyPlaying();
+            if (position.playable.uri === this.currentlyPlaying.uri) {
+                await this.prisma.musicTag.update({
+                    where: { uid: this.currentlyPlaying.uid },
+                    data: {
+                        lastTrackUri: position.position.trackUri,
+                        lastTrackName: position.position.trackName,
+                        lastPositionMs: position.position.positionMs,
+                    }
+                });
+            }
+        }
+    }
+
     public async stopPlaying() {
         if (this.currentlyPlaying) {
             const lastPosition = await this.musicProvider.stop(this.currentlyPlaying);
             
-            await this.prisma.musicTag.update({
-                where: { uid: this.currentlyPlaying.uid },
-                data: {
-                    lastTrackUri: lastPosition.trackUri,
-                    lastPositionMs: lastPosition.positionMs,
-                }
-            });
+            if (lastPosition.playable.uri === this.currentlyPlaying.uri) {
+                await this.prisma.musicTag.update({
+                    where: { uid: this.currentlyPlaying.uid },
+                    data: {
+                        lastTrackUri: lastPosition.position.trackUri,
+                        lastTrackName: lastPosition.position.trackName,
+                        lastPositionMs: lastPosition.position.positionMs,
+                    }
+                });
+            }
 
             this.currentlyPlaying = undefined;
         }

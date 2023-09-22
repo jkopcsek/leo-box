@@ -5,7 +5,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { ConfigurationService } from './leo-box/configuration.service';
-import { LeoBoxService } from './leo-box/leo-box-service';
+import { LeoBoxScheduler } from './leo-box/leo-box.scheduler';
+import { LeoBoxService } from './leo-box/leo-box.service';
 import { CurrentStateResolver } from './leo-box/resolvers/current-state.resolver';
 import { MusicControlsResolver } from './leo-box/resolvers/music-control.resolver';
 import { MusicTagResolver } from './leo-box/resolvers/music-tag.resolver';
@@ -34,6 +35,6 @@ import { PrismaModule } from './prisma/prisma.module';
     }),
   ],
   controllers: [LeoBoxController, SpotifyAuthController, SpotifyController, SonosController],
-  providers: [ConfigurationService, LeoBoxService, SpotifyService, SpotifyMusicProvider, SonosService, MusicTagResolver, CurrentStateResolver, SpotifyResolver, SonosResolver, MusicControlsResolver, TagScanner],
+  providers: [ConfigurationService, LeoBoxService, LeoBoxScheduler, SpotifyService, SpotifyMusicProvider, SonosService, MusicTagResolver, CurrentStateResolver, SpotifyResolver, SonosResolver, MusicControlsResolver, TagScanner],
 })
 export class AppModule {}

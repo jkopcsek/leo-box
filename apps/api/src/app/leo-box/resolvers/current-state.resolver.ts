@@ -5,7 +5,7 @@ import {
 } from '@nestjs/graphql'
 import { PubSub } from 'graphql-subscriptions'
 import 'reflect-metadata'
-import { LeoBoxService } from '../leo-box-service'
+import { LeoBoxService } from '../leo-box.service'
 import { TagScanner } from '../tag-scanner'
 import { StateObject } from './state.object'
 import { TagObject } from './tag.object'

@@ -8,19 +8,20 @@ export interface Playable {
 
 export interface Position {
     trackUri: string;
+    trackName: string;
     positionMs: number;
 }
 
-export interface CurrentlyPlaying {
+export interface PlayablePosition {
     playable: Playable;
     position: Position;
 }
 
 export interface MusicProvider {
-    getCurrentlyPlaying(): Promise<CurrentlyPlaying>;
+    getCurrentlyPlaying(): Promise<PlayablePosition>;
     search(query: String, type: String): Promise<Playable[]>;
 
     play(playable: Playable): Promise<void>;
     contine(playable: Playable, position: Position): Promise<void>;
-    stop(playable: Playable): Promise<Position>;
+    stop(playable: Playable): Promise<PlayablePosition>;
 }

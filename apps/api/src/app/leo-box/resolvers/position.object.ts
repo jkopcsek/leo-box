@@ -7,5 +7,8 @@ export class PositionObject implements Position {
     trackUri: string;
 
     @Field()
+    trackName: string;
+
+    @Field()
     positionMs: number;
 }

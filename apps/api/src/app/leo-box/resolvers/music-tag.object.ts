@@ -12,15 +12,24 @@ export class MusicTagObject {
     @Field(() => Date)
     modifiedAt: Date;
 
-    @Field(() => String)
+    @Field(() => String, { nullable: true })
     name?: string;
     
-    @Field(() => String)
+    @Field(() => String, { nullable: true })
     type?: string;
     
-    @Field(() => String)
+    @Field(() => String, { nullable: true })
     imageUrl?: string;
 
-    @Field(() => String)
+    @Field(() => String, { nullable: true })
     uri?: string;
+
+    @Field(() => String, { nullable: true })
+    lastTrackUri?: string;
+
+    @Field(() => String, { nullable: true })
+    lastTrackName?: string;
+
+    @Field(() => Number, { nullable: true })
+    lastPositionMs?: number;
 }

@@ -17,12 +17,13 @@ export interface Playable {
 
 export interface Position {
   trackUri: string;
-  trackName: string;
+  trackName?: string;
   positionMs: number;
 }
 
 export interface State {
   tag?: Tag;
+  overrideTag?: Tag;
   currentlyPlaying?: Playable;
   lastPlayed?: Playable;
   lastPosition?: Position;
@@ -61,6 +62,9 @@ export class LeoBoxService {
           tag {
             uid
           },
+          overrideTag {
+            uid
+          }
           currentlyPlaying {
             uri,
             type,
@@ -74,7 +78,8 @@ export class LeoBoxService {
             imageUrl
           },
           lastPosition {
-            trackUri,
+            trackUri
+            trackName
             positionMs
           }
         }
@@ -87,11 +92,14 @@ export class LeoBoxService {
     return this.apollo.watchQuery<{musicTags: MusicTag[]}>({
       query: gql`{
         musicTags {
-          uid,
-          name,
-          type,
-          uri,
+          uid
+          name
+          type
+          uri
           imageUrl
+          lastTrackUri
+          lastTrackName
+          lastPositionMs
         }
       }`,
       pollInterval: 5000,
@@ -214,6 +222,19 @@ export class LeoBoxService {
       }`
     });
   }
+
+  public overrideTagUid(item?: MusicTag): Observable<MutationResult<{result: string, error?: string}>> {
+    return this.apollo.mutate({
+      mutation: gql`mutation overrideTagUid($uid: String) {
+        overrideTagUid(uid: $uid) {
+          uid
+        }
+      }`,
+      variables: {
+        uid: item?.uid
+      }
+    });    
+}
 
   public play(item: SpotifyItem | MusicTag): Observable<MutationResult<{result: string, error?: string}>> {
       return this.apollo.mutate({

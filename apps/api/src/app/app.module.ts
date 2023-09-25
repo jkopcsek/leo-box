@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ScheduleModule } from '@nestjs/schedule';
 import { join } from 'path';
 import { ConfigurationService } from './leo-box/configuration.service';
 import { LeoBoxScheduler } from './leo-box/leo-box.scheduler';
@@ -26,6 +27,7 @@ import { PrismaModule } from './prisma/prisma.module';
   imports: [
     HttpModule, 
     PrismaModule,
+    ScheduleModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: true,

@@ -30,9 +30,17 @@ export class CurrentStateResolver {
 
   @Query((returns) => StateObject)
   async currentState(@Context() ctx): Promise<StateObject> {
+    const lastPosition = this.leobox.currentlyPlaying?.lastTrackUri ? { 
+      trackName: this.leobox.currentlyPlaying?.lastTrackName, 
+      trackUri: this.leobox.currentlyPlaying?.lastTrackUri, 
+      positionMs: this.leobox.currentlyPlaying?.lastPositionMs 
+    } : undefined;
+
     return {
       tag: this.tagScanner.currentTag.value,
+      overrideTag: this.tagScanner.overrideTagUid ? { uid: this.tagScanner.overrideTagUid } : undefined,
       currentlyPlaying: this.leobox.currentlyPlaying,
+      lastPosition
     };
   }
 
@@ -41,7 +49,7 @@ export class CurrentStateResolver {
       @Args('uid', {nullable: true}) uid?: string,
   ): Promise<TagObject | undefined> {
       this.tagScanner.overrideTagUid = uid;
-      return uid ? { uid: uid } : undefined;
+      return uid ? { uid } : undefined;
   }
 
   @Subscription((returns) => TagObject) 

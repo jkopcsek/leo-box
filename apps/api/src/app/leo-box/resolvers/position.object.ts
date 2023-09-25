@@ -6,7 +6,7 @@ export class PositionObject implements Position {
     @Field()
     trackUri: string;
 
-    @Field()
+    @Field({nullable: true})
     trackName: string;
 
     @Field()

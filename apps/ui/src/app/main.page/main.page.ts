@@ -82,6 +82,9 @@ export class MainPage implements OnInit, OnDestroy {
   public async fastBackward() {
     return lastValueFrom(this.leoBoxService.fastBackward());
   }
+  public async overrideTag(item?: MusicTag) {
+    return lastValueFrom(this.leoBoxService.overrideTagUid(item))
+  }
   public async play(item: SpotifyItem | MusicTag) {
     return lastValueFrom(this.leoBoxService.play(item))
   }

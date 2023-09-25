@@ -58,7 +58,12 @@ export class LeoBoxService {
     public async updatePosition() {
         if (this.currentlyPlaying) {
             const position = await this.musicProvider.getCurrentlyPlaying();
+            this.logger.log(`Currently playing ${this.currentlyPlaying.uri} at ${this.currentlyPlaying.lastTrackUri} (${this.currentlyPlaying.lastPositionMs}ms)`);
+            this.logger.log(`Updating position for ${position.playable.name} [${position.playable.uri}] to ${position.position.trackName} at ${position.position.positionMs}ms)`);
             if (position.playable.uri === this.currentlyPlaying.uri) {
+                this.currentlyPlaying.lastTrackUri = position.position.trackUri;
+                this.currentlyPlaying.lastTrackName = position.position.trackName;
+                this.currentlyPlaying.lastPositionMs = position.position.positionMs;
                 await this.prisma.musicTag.update({
                     where: { uid: this.currentlyPlaying.uid },
                     data: {

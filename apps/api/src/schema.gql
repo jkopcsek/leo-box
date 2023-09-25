@@ -1,0 +1,115 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type PlayableObject {
+  uri: String!
+  type: String!
+  name: String!
+  imageUrl: String!
+}
+
+type PositionObject {
+  trackUri: String!
+  trackName: String!
+  positionMs: Float!
+}
+
+type TagObject {
+  uid: String!
+}
+
+type StateObject {
+  tag: TagObject
+  currentlyPlaying: PlayableObject
+  lastPlayed: PlayableObject
+  lastPosition: PositionObject
+}
+
+type MusicControlResult {
+  result: String!
+  error: String!
+}
+
+type MusicTagObject {
+  uid: String!
+  createdAt: Timestamp!
+  modifiedAt: Timestamp!
+  name: String
+  type: String
+  imageUrl: String
+  uri: String
+  lastTrackUri: String
+  lastTrackName: String
+  lastPositionMs: Float
+}
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type SonosItemObject {
+  type: String!
+  name: String!
+  uri: String!
+  imageUrl: String
+}
+
+type SonosAuthObject {
+  url: String!
+}
+
+type SpotifyItemObject {
+  type: String!
+  name: String!
+  uri: String!
+  imageUrl: String
+}
+
+type SpotifyAuthObject {
+  url: String!
+}
+
+type Query {
+  musicTags: [MusicTagObject!]
+  currentTag: TagObject
+  currentState: StateObject!
+  spotifyAuth: SpotifyAuthObject!
+  spotifySearch(query: String!, type: String!): [SpotifyItemObject!]!
+  spotifyTracks(albumId: String!): [SpotifyItemObject!]!
+  sonosAuth: SonosAuthObject!
+  sonosSearch(query: String!, type: String!): [SonosItemObject!]!
+}
+
+type Mutation {
+  createMusicTag(data: MusicTagCreateInput!): MusicTagObject!
+  updateMusicTag(uid: String!, data: MusicTagUpdateInput!): MusicTagObject!
+  upsertMusicTag(uid: String!, data: MusicTagUpdateInput!): MusicTagObject!
+  deleteMusicTag(uid: String!): MusicTagObject!
+  overrideTagUid(uid: String): TagObject
+  fastForward: MusicControlResult!
+  fastBackward: MusicControlResult!
+  play(uri: String!): MusicControlResult!
+  resume: MusicControlResult!
+  pause: MusicControlResult!
+}
+
+input MusicTagCreateInput {
+  uid: String!
+  name: String!
+  type: String!
+  imageUrl: String!
+  uri: String!
+}
+
+input MusicTagUpdateInput {
+  name: String!
+  type: String!
+  imageUrl: String!
+  uri: String!
+}
+
+type Subscription {
+  currentTagChanged: TagObject!
+}

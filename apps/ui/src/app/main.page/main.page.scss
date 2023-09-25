@@ -34,6 +34,18 @@ main {
       border-radius: 6px;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
+
+      .rfid-tag {
+        font-family: monospace;
+        padding: 4px;
+      }
+
+      .rfid-tag-override {
+        color: red;
+        display: flex;
+        align-items: center;
+      }
     }
 
     .music-card {

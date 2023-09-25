@@ -16,7 +16,11 @@
         <div class="rfid-scanner-card-content">
           <img *ngIf="!currentState?.tag" class="rfid-scanner-icon" src="assets/rfid-icon.svg"/>
           <div *ngIf="currentState?.tag" class="rfid-card">
-            {{currentState?.tag?.uid}}
+            <div class="rfid-tag">{{currentState?.tag?.uid}}</div>
+            <div *ngIf="currentState?.overrideTag" class="rfid-tag-override">
+              <div class="rfid-tag">{{currentState?.overrideTag?.uid}}</div>
+              <button type="button" pButton icon="pi pi-times" (click)="overrideTag()"></button>
+            </div>
           </div>
         </div>
       </p-card>
@@ -28,7 +32,9 @@
             <img class="music-tag-icon" [src]="currentState?.currentlyPlaying?.imageUrl"> 
             <div class="music-tag-title">
               {{currentState?.currentlyPlaying?.name}}<br>
-              {{currentState?.lastPosition?.trackName}} ({{currentState?.lastPosition?.positionMs}})
+              <i *ngIf="currentState?.lastPosition?.positionMs">
+                {{currentState?.lastPosition?.trackName}} ({{(currentState?.lastPosition?.positionMs ?? 0) / 60000 | number: '2.0-0'}}:{{((currentState?.lastPosition?.positionMs ?? 0) / 1000) % 60 | number: '2.0-0'}})
+              </i>
             </div>
           </div>
         </div>
@@ -77,12 +83,13 @@
         <div class="music-tag-row" [class.music-tag-active]="currentState?.tag?.uid === tag.uid">
           <img class="music-tag-icon" [src]="tag.imageUrl"> 
           <div class="music-tag-title">
-            {{tag.uid}} -> {{tag.name}}
-            <div class="music-tag-position" *ngIf="tag.lastTrackName">
-              {{tag.lastTrackName}} ({{tag.lastPositionMs}})
+            <b>[{{tag.uid}}]</b> {{tag.name}}
+            <div class="music-tag-position" style="font-style: italic;" *ngIf="tag.lastTrackName">
+              {{tag.lastTrackName}} ({{tag.lastPositionMs / 60000 | number: '2.0-0'}}:{{(tag.lastPositionMs / 1000) % 60 | number: '2.0-0'}})
             </div>
           </div>
           <div class="buttons">
+            <button type="button" pButton icon="pi pi-tag" (click)="overrideTag(tag)"></button>
             <button type="button" pButton icon="pi pi-play" (click)="play(tag)"></button>
             <button class="music-tag-delete" type="button" pButton icon="pi pi-trash"  (click)="deleteMusicTag(tag)"></button>
           </div>
